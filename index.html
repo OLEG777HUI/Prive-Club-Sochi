@@ -1,27 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Prive Club Sochi</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { background-color: #000; color: #D4AF37; text-align: center; font-family: sans-serif; padding-top: 50px; }
-        .gold-btn { background: #D4AF37; color: #000; border: none; padding: 15px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; }
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .logo-container {
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #D4AF37; /* Золотой цвет */
+            font-size: 24px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        p {
+            color: #888;
+            font-size: 14px;
+            padding: 0 40px;
+            margin-bottom: 40px;
+        }
+        .gold-btn {
+            background-color: #D4AF37;
+            color: #000;
+            border: none;
+            padding: 15px 50px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
-    <video autoplay loop muted playsinline style="width: 150px; height: auto; margin-top: 30px;">
-    <source src="logo.gif.mp4" type="video/mp4">
-    Ваш браузер не поддерживает видео.
-</video>
-    
+    <div class="logo-container">
+        <video autoplay loop muted playsinline style="width: 150px; height: auto; border-radius: 10px;">
+            <source src="logo.gif.mp4" type="video/mp4">
+            <img src="logo.gif" alt="Logo" style="width: 150px;">
+        </video>
+    </div>
+
     <h1>✨ Prive Club Sochi ✨</h1>
-    <p>Закрытое сообщество успешных людей</p>
-    <br>
-    <button class="gold-btn" onclick="tg.close()">ВОЙТИ В КЛУБ</button>
+    <p>Закрытое сообщество для самых успешных и амбициозных людей.</p>
+    
+    <button class="gold-btn" onclick="startRegistration()">Стать участником</button>
+
     <script>
-        let tg = window.Telegram.WebApp;
+        const tg = window.Telegram.WebApp;
+        tg.ready();
         tg.expand();
+
+        function startRegistration() {
+            // Теперь кнопка показывает нижнюю панель Telegram с подтверждением
+            tg.MainButton.setText("ПЕРЕЙТИ К АНКЕТЕ").show();
+            tg.MainButton.onClick(function() {
+                alert("Начинаем регистрацию в Prive Club!");
+            });
+        }
     </script>
 </body>
 </html>
