@@ -1,1 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Privé Club Sochi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        /* Здесь мы настраиваем шрифты и особые кнопки-ползунки */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212; /* Темно-серый/черный фон */
+            color: #F0ECE1; /* Молочный цвет текста */
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
 
+        /* Стиль для переключателей (тумблеров) в настройках */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #F0ECE1;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #F0ECE1;
+        }
+        .toggle-checkbox:checked + .toggle-label:after {
+            transform: translateX(100%);
+            border-color: white;
+        }
+
+        /* Стиль для ползунков (возраст, дистанция) */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #F0ECE1; /* Молочный кружок */
+            cursor: pointer;
+            margin-top: -8px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #333333; /* Темно-серая полоска */
+            border-radius: 2px;
+        }
+
+        /* Скрываем экраны, которые сейчас не активны */
+        .screen-hidden { display: none !important; }
+        
+        /* Активная кнопка в нижнем меню */
+        .nav-active { color: #F0ECE1 !important; }
+        .nav-inactive { color: #666666 !important; }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col">
+
+    <div id="screen-home" class="flex-1 relative w-full h-full bg-black">
+        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop" 
+             alt="Profile" class="w-full h-[85vh] object-cover rounded-b-3xl">
+        
+        <div class="absolute top-6 left-4 flex items-center justify-center w-10 h-10 rounded-full bg-white border border-gray-500 overflow-hidden">
+            <img src="prive-logo.jpg" alt="Privé" class="w-8 h-8 object-contain">
+        </div>
+
+        <div class="absolute top-6 right-4 bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full">
+            <span class="text-xs font-semibold tracking-wider text-white">ЦЕНТРАЛЬНЫЙ</span>
+        </div>
+
+        <div class="absolute bottom-[10vh] left-0 right-0 h-64 bg-gradient-to-t from-[#121212] to-transparent"></div>
+
+        <div class="absolute bottom-[12vh] left-0 right-0 px-6">
+            <div class="flex items-center mb-4">
+                <h2 class="text-2xl font-bold uppercase mr-2 text-white">АЛЕКСАНДР, 28</h2>
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-xs ml-1 font-semibold text-white uppercase">Verified</span>
+            </div>
+
+            <div class="flex justify-center items-center space-x-6">
+                <button class="w-16 h-16 bg-black rounded-full flex items-center justify-center border border-gray-800">
+                    <svg class="w-6 h-6 text-[#F0ECE1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <button class="w-20 h-20 bg-[#F0ECE1] rounded-full flex items-center justify-center">
+                    <svg class="w-10 h-10 text-black" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-likes" class="screen-hidden flex-1 flex flex-col items-center justify-center px-6">
+        <div class="w-24 h-24 rounded-full border border-gray-600 flex items-center justify-center mb-6">
+            <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+        </div>
+        <h2 class="text-2xl font-bold uppercase tracking-wide mb-2">ЛАЙКИ</h2>
+        <p class="text-gray-400 text-sm text-center">Здесь появятся люди, которым вы<br>понравились</p>
+    </div>
+
+    <div id="screen-chats" class="screen-hidden flex-1 flex flex-col items-center justify-center px-6">
+        <div class="w-24 h-24 rounded-full border border-gray-600 flex items-center justify-center mb-6">
+            <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+        </div>
+        <h2 class="text-2xl font-bold uppercase tracking-wide mb-2">СООБЩЕНИЯ</h2>
+        <p class="text-gray-400 text-sm text-center">Ваши совпадения и чаты появятся<br>здесь</p>
+    </div>
+
+    <div id="screen-settings" class="screen-hidden flex-1 overflow-y-auto px-6 py-8 pb-24">
+        <h1 class="text-2xl font-bold uppercase tracking-wide mb-1 text-white">НАСТРОЙКИ АНКЕТЫ</h1>
+        <p class="text-gray-400 text-sm mb-8">Настройте параметры поиска</p>
+
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <span class="uppercase font-bold text-sm tracking-wider">ВОЗРАСТ</span>
+                <span class="text-sm font-bold">20 - 35</span>
+            </div>
+            <div class="mb-6">
+                <div class="flex justify-between text-xs text-gray-400 mb-2"><span>Мин</span><span>20</span></div>
+                <input type="range" min="18" max="60" value="20" class="w-full">
+            </div>
+            <div>
+                <div class="flex justify-between text-xs text-gray-400 mb-2"><span>Макс</span><span>35</span></div>
+                <input type="range" min="18" max="60" value="35" class="w-full">
+            </div>
+        </div>
+
+        <div class="mb-8 border-t border-gray-800 pt-8">
+            <div class="flex justify-between items-center mb-4">
+                <span class="uppercase font-bold text-sm tracking-wider">ДИСТАНЦИЯ</span>
+                <span class="text-sm font-bold">Сочи + 50 км</span>
+            </div>
+            <input type="range" min="5" max="100" value="50" class="w-full mb-2">
+            <div class="flex justify-between text-xs text-gray-400"><span>5 КМ</span><span>100 КМ</span></div>
+        </div>
+
+        <div class="mb-8 border-t border-gray-800 pt-8">
+            <span class="uppercase font-bold text-sm tracking-wider block mb-4">ЛОКАЦИЯ</span>
+            <div class="bg-[#2A2A2A] rounded-xl p-4 flex justify-between items-center border border-gray-600">
+                <span class="font-medium text-white">Центральный</span>
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-800 pt-8 space-y-6">
+            <span class="uppercase font-bold text-sm tracking-wider block mb-4">ПОКАЗЫВАТЬ</span>
+            
+            <div class="flex justify-between items-center">
+                <span class="font-medium">Мужчины</span>
+                <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                    <input type="checkbox" name="toggle" id="toggle1" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-500 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out"/>
+                    <label for="toggle1" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-500 cursor-pointer transition-colors duration-200 ease-in-out"></label>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <span class="font-medium">Женщины</span>
+                <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                    <input type="checkbox" name="toggle" id="toggle2" checked class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-500 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out"/>
+                    <label for="toggle2" class="toggle-label block overflow-hidden h-6 rounded-full bg-[#F0ECE1] cursor-pointer transition-colors duration-200 ease-in-out"></label>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <span class="font-medium">Только с фото</span>
+                <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                    <input type="checkbox" name="toggle" id="toggle3" checked class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-500 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out"/>
+                    <label for="toggle3" class="toggle-label block overflow-hidden h-6 rounded-full bg-[#F0ECE1] cursor-pointer transition-colors duration-200 ease-in-out"></label>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <span class="font-medium">Только верифицированные</span>
+                <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                    <input type="checkbox" name="toggle" id="toggle4" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-500 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out"/>
+                    <label for="toggle4" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-500 cursor-pointer transition-colors duration-200 ease-in-out"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="h-[10vh] bg-[#121212] border-t border-[#222] flex justify-between items-center px-6 fixed bottom-0 w-full z-50">
+        
+        <button onclick="openTab('home')" id="nav-home" class="flex flex-col items-center nav-active">
+            <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span class="text-[9px] uppercase font-bold tracking-widest">HOME</span>
+        </button>
+
+        <button onclick="openTab('likes')" id="nav-likes" class="flex flex-col items-center nav-inactive">
+            <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <span class="text-[9px] uppercase font-bold tracking-widest">LIKES</span>
+        </button>
+
+        <button onclick="openTab('chats')" id="nav-chats" class="flex flex-col items-center nav-inactive">
+            <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+            <span class="text-[9px] uppercase font-bold tracking-widest">CHATS</span>
+        </button>
+
+        <button onclick="openTab('settings')" id="nav-settings" class="flex flex-col items-center nav-inactive">
+            <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+            <span class="text-[9px] uppercase font-bold tracking-widest">SETTINGS</span>
+        </button>
+
+        <button class="flex flex-col items-center nav-inactive">
+            <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <span class="text-[9px] uppercase font-bold tracking-widest">PROFILE</span>
+        </button>
+    </div>
+
+    <script>
+        // Инициализация Telegram WebApp
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Открываем приложение на весь экран
+
+        // Список всех экранов
+        const screens = ['home', 'likes', 'chats', 'settings'];
+
+        // Функция переключения вкладок
+        function openTab(tabName) {
+            // 1. Прячем все экраны
+            screens.forEach(screen => {
+                document.getElementById('screen-' + screen).classList.add('screen-hidden');
+                document.getElementById('nav-' + screen).classList.remove('nav-active');
+                document.getElementById('nav-' + screen).classList.add('nav-inactive');
+            });
+
+            // 2. Показываем нужный экран
+            document.getElementById('screen-' + tabName).classList.remove('screen-hidden');
+            
+            // 3. Делаем кнопку светлой (активной)
+            document.getElementById('nav-' + tabName).classList.remove('nav-inactive');
+            document.getElementById('nav-' + tabName).classList.add('nav-active');
+        }
+    </script>
+
+</body>
+</html>
