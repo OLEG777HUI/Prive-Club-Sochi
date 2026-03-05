@@ -3,74 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Prive Club Sochi</title>
+    <title>Prevé Club Sochi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
         body {
-            background-color: #000;
-            color: #fff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+            color: white;
             margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
+            overflow: hidden;
         }
-        .logo-container {
-            margin-bottom: 20px;
+        .gold-border {
+            border: 1px solid rgba(212, 175, 55, 0.4);
         }
-        h1 {
-            color: #D4AF37; /* Золотой цвет */
-            font-size: 24px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-        p {
-            color: #888;
-            font-size: 14px;
-            padding: 0 40px;
-            margin-bottom: 40px;
-        }
-        .gold-btn {
-            background-color: #D4AF37;
-            color: #000;
-            border: none;
-            padding: 15px 50px;
-            border-radius: 30px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-            text-transform: uppercase;
+        .video-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #D4AF37;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
         }
     </style>
 </head>
-<body>
-    <div class="logo-container">
-        <video autoplay loop muted playsinline style="width: 150px; height: auto; border-radius: 10px;">
+<body class="flex flex-col items-center justify-center min-h-screen">
+
+    <div class="video-circle mb-8">
+        <video autoplay loop muted playsinline class="w-full h-full object-cover">
             <source src="logo.gif.mp4" type="video/mp4">
-            <img src="logo.gif" alt="Logo" style="width: 150px;">
         </video>
     </div>
 
-    <h1>✨ Prive Club Sochi ✨</h1>
-    <p>Закрытое сообщество для самых успешных и амбициозных людей.</p>
-    
-    <button class="gold-btn" onclick="startRegistration()">Стать участником</button>
+    <div class="text-center px-6">
+        <h1 class="text-3xl font-light tracking-[0.3em] uppercase text-[#D4AF37] mb-2">Privé</h1>
+        <p class="text-gray-500 text-xs tracking-widest uppercase mb-10">Sochi Private Club</p>
+        
+        <button onclick="startApp()" class="gold-border bg-transparent text-[#D4AF37] px-12 py-4 rounded-full text-sm font-semibold tracking-widest hover:bg-[#D4AF37] hover:text-black transition-all duration-300 active:scale-95">
+            ENTER CLUB
+        </button>
+    </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
 
-        function startRegistration() {
-            // Теперь кнопка показывает нижнюю панель Telegram с подтверждением
-            tg.MainButton.setText("ПЕРЕЙТИ К АНКЕТЕ").show();
-            tg.MainButton.onClick(function() {
-                alert("Начинаем регистрацию в Prive Club!");
-            });
+        function startApp() {
+            // Переход к регистрации или основной части
+            tg.MainButton.setText("ПРОДОЛЖИТЬ").show();
         }
     </script>
 </body>
