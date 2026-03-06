@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>✨ Prive Club Sochi ✨</title>
+    <title>Privé Club Sochi</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
@@ -19,7 +19,6 @@
             color: #F0ECE1; 
             user-select: none;
             -webkit-tap-highlight-color: transparent;
-            /* Убиваем тряску и прыжки экрана в Telegram */
             position: fixed;
             width: 100vw;
             height: 100vh;
@@ -30,7 +29,6 @@
         .nav-active { color: #F2E8C9 !important; opacity: 1; }
         .nav-inactive { color: #F2E8C9 !important; opacity: 0.4; }
 
-        /* Выравниваем все поля ввода под один идеальный размер */
         .input-field {
             width: 100%;
             height: 56px; 
@@ -48,14 +46,12 @@
         .input-field:focus { border-color: #F2E8C9; }
         .input-field::placeholder { color: #666; }
         
-        /* Возвращаем высоту для поля Описание, чтобы оно было большим */
         textarea.input-field {
             height: 128px;
             padding: 16px;
             resize: none;
         }
 
-        /* Центрируем текст внутри барабана даты */
         input[type="date"].input-field {
             line-height: 54px;
         }
@@ -90,7 +86,6 @@
         .menu-item:first-child { border-top-left-radius: 16px; border-top-right-radius: 16px; }
         .menu-item:last-child { border-bottom: none; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; }
 
-        /* Стиль для кнопки выхода */
         .gold-btn {
             width: 100%;
             background-color: transparent;
@@ -122,7 +117,7 @@
     <div id="registration-flow" class="absolute inset-0 z-[100] bg-[#121212] flex flex-col">
         <div class="px-6 pt-6 pb-4 flex items-center justify-between">
             <button onclick="prevRegStep()" class="text-[#F2E8C9] p-2 -ml-2"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
-            <span id="reg-title-top" class="text-[#F2E8C9] font-bold tracking-widest uppercase text-lg">✨ Prive Club Sochi ✨</span>
+            <span id="reg-title-top" class="text-[#F2E8C9] font-bold tracking-widest uppercase text-lg">Privé</span>
             <div class="w-8"></div>
         </div>
         <div class="flex px-6 mb-8" id="progress-container">
@@ -240,12 +235,16 @@
                             <svg class="w-6 h-6 text-[#F2E8C9] drop-shadow-md" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
                         </div>
                         
-                        <div class="flex justify-center items-center space-x-6 pb-4">
-                            <button onclick="premiumAction('message')" class="w-14 h-14 bg-[#121212] rounded-full flex items-center justify-center border-2 border-[#F2E8C9] shadow-[0_0_15px_rgba(242,232,201,0.3)] active:scale-90 transition-transform">
-                                <svg class="w-6 h-6 text-[#F2E8C9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                        <div class="flex justify-center items-center space-x-5 pb-4">
+                            <button onclick="premiumAction('message')" class="w-12 h-12 bg-[#121212] rounded-full flex items-center justify-center border border-[#F2E8C9]/40 shadow-[0_0_15px_rgba(242,232,201,0.15)] active:scale-90 transition-transform">
+                                <svg class="w-5 h-5 text-[#F2E8C9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                             </button>
-                            <button onclick="nextCard('left')" class="w-16 h-16 bg-black rounded-full flex items-center justify-center border border-gray-800 active:scale-90 transition-transform"><svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-                            <button onclick="nextCard('right')" class="w-20 h-20 bg-[#F2E8C9] rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-transform"><svg class="w-10 h-10 text-black" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg></button>
+                            <button onclick="nextCard('left')" class="w-16 h-16 bg-[#1A1A1A] rounded-full flex items-center justify-center border-2 border-gray-800 active:scale-90 transition-transform">
+                                <svg class="w-7 h-7 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                            <button onclick="nextCard('right')" class="w-16 h-16 bg-[#F2E8C9] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(242,232,201,0.3)] active:scale-90 transition-transform">
+                                <svg class="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -272,7 +271,7 @@
                 <div class="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm px-6">
                     <div class="bg-[#1A1A1A] p-8 rounded-3xl border border-[#F2E8C9]/30 text-center w-full max-w-sm shadow-2xl">
                         <div class="w-16 h-16 rounded-full bg-[#F2E8C9]/10 mx-auto flex items-center justify-center mb-4">
-                            <svg class="w-8 h-8 text-[#F2E8C9]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg class="w-8 h-8 text-[#F2E8C9]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5L7.5 3l4.5 4.5L16.5 3l4.5 4.5v9a1.5 1.5 0 01-1.5 1.5H4.5A1.5 1.5 0 013 16.5v-9z"></path></svg>
                         </div>
                         <h2 class="text-xl font-bold uppercase tracking-widest text-[#F2E8C9] mb-2">РАДАР РЕЗИДЕНТОВ</h2>
                         <p class="text-gray-400 text-xs uppercase tracking-wide mb-6 leading-relaxed">Смотрите, кто находится рядом с вами.<br>Функция доступна только по подписке.</p>
@@ -297,7 +296,7 @@
                 <div onclick="openSubScreen('premium')" class="bg-[#F0ECE1] rounded-2xl p-4 flex items-center justify-between mb-8 cursor-pointer active:scale-95 transition-transform">
                     <div class="flex items-center">
                         <div class="w-10 h-10 rounded-full bg-black/10 flex items-center justify-center mr-3">
-                            <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5L7.5 3l4.5 4.5L16.5 3l4.5 4.5v9a1.5 1.5 0 01-1.5 1.5H4.5A1.5 1.5 0 013 16.5v-9z"></path></svg>
                         </div>
                         <div>
                             <h3 class="text-black font-bold text-lg leading-tight">Privé Premium</h3>
@@ -430,7 +429,7 @@
                 </div>
                 <div class="flex items-center p-4 border-b border-[#222]">
                     <div class="w-10 h-10 rounded-xl bg-[#F2E8C9]/10 flex items-center justify-center mr-4">
-                        <svg class="w-6 h-6 text-[#F2E8C9]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                        <svg class="w-6 h-6 text-[#F2E8C9]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5L7.5 3l4.5 4.5L16.5 3l4.5 4.5v9a1.5 1.5 0 01-1.5 1.5H4.5A1.5 1.5 0 013 16.5v-9z"></path></svg>
                     </div>
                     <div class="flex-1">
                         <h4 class="text-white font-medium text-sm">Статус VIP</h4>
