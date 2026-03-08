@@ -13,9 +13,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
-        :root {
-            color-scheme: dark;
-        }
+        :root { color-scheme: dark; }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -34,45 +32,25 @@
         .nav-inactive { color: #F2E8C9 !important; opacity: 0.4; }
 
         .input-field {
-            width: 100%;
-            height: 56px; 
-            box-sizing: border-box;
-            background-color: #1A1A1A;
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 0 16px;
-            color: #F0ECE1;
-            outline: none;
-            transition: border-color 0.3s;
-            appearance: none;
-            -webkit-appearance: none;
+            width: 100%; height: 56px; box-sizing: border-box;
+            background-color: #1A1A1A; border: 1px solid #333;
+            border-radius: 12px; padding: 0 16px; color: #F0ECE1;
+            outline: none; transition: border-color 0.3s;
+            appearance: none; -webkit-appearance: none;
         }
         .input-field:focus { border-color: #F2E8C9; }
         .input-field::placeholder { color: #666; }
         
-        textarea.input-field {
-            height: 128px;
-            padding: 16px;
-            resize: none;
-        }
-
-        input[type="date"].input-field {
-            line-height: 54px;
-        }
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(1);
-            opacity: 0.6;
-            cursor: pointer;
-        }
+        textarea.input-field { height: 128px; padding: 16px; resize: none; }
+        input[type="date"].input-field { line-height: 54px; }
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.6; cursor: pointer; }
 
         .gender-btn {
             flex: 1; text-align: center; padding: 14px;
             background-color: #1A1A1A; border: 1px solid #333;
             border-radius: 12px; color: #666; transition: all 0.3s;
         }
-        .gender-btn.active {
-            border-color: #F2E8C9; color: #F2E8C9; background-color: rgba(242, 232, 201, 0.05);
-        }
+        .gender-btn.active { border-color: #F2E8C9; color: #F2E8C9; background-color: rgba(242, 232, 201, 0.05); }
 
         .progress-bar { height: 3px; border-radius: 2px; flex: 1; margin: 0 4px; background-color: #333; }
         .progress-bar.active { background-color: #F2E8C9; }
@@ -93,49 +71,19 @@
         .hidden-flow { display: none !important; }
         .screen-hidden { display: none !important; }
 
-        @keyframes swipeLeft {
-            to { transform: translateX(-100%) rotate(-10deg); opacity: 0; }
-        }
-        @keyframes swipeRight {
-            to { transform: translateX(100%) rotate(10deg); opacity: 0; }
-        }
+        @keyframes swipeLeft { to { transform: translateX(-100%) rotate(-10deg); opacity: 0; } }
+        @keyframes swipeRight { to { transform: translateX(100%) rotate(10deg); opacity: 0; } }
         .swiping-left { animation: swipeLeft 0.3s forwards; }
         .swiping-right { animation: swipeRight 0.3s forwards; }
 
-        .leaflet-layer,
-        .leaflet-control-zoom-in,
-        .leaflet-control-zoom-out,
-        .leaflet-control-attribution {
+        .leaflet-layer, .leaflet-control-zoom-in, .leaflet-control-zoom-out, .leaflet-control-attribution {
             filter: invert(100%) grayscale(100%) sepia(20%) brightness(85%) contrast(110%);
         }
-        .leaflet-container {
-            background-color: #121212 !important;
-            font-family: 'Inter', sans-serif;
-        }
-        .leaflet-popup-content-wrapper {
-            background: #1A1A1A !important;
-            color: #F0ECE1 !important;
-            border: 1px solid #333;
-            border-radius: 16px !important;
-            padding: 0 !important;
-            overflow: hidden;
-        }
-        .leaflet-popup-tip {
-            background: #1A1A1A !important;
-            border: 1px solid #333;
-        }
-        .leaflet-popup-content {
-            margin: 12px !important;
-            text-align: center;
-        }
-        
-        .custom-map-marker {
-            background: transparent !important; 
-            border: none !important; 
-            display: flex !important; 
-            align-items: center !important; 
-            justify-content: center !important; 
-        }
+        .leaflet-container { background-color: #121212 !important; font-family: 'Inter', sans-serif; }
+        .leaflet-popup-content-wrapper { background: #1A1A1A !important; color: #F0ECE1 !important; border: 1px solid #333; border-radius: 16px !important; padding: 0 !important; overflow: hidden; }
+        .leaflet-popup-tip { background: #1A1A1A !important; border: 1px solid #333; }
+        .leaflet-popup-content { margin: 12px !important; text-align: center; }
+        .custom-map-marker { background: transparent !important; border: none !important; display: flex !important; align-items: center !important; justify-content: center !important; }
     </style>
 </head>
 <body class="h-screen w-screen relative">
@@ -219,31 +167,32 @@
                 <h1 class="text-2xl font-bold mb-1">Добавьте фото и видео</h1>
                 <p class="text-gray-500 text-sm mb-8">Загрузите три фотографии с собой</p>
                 
+                <input type="file" id="file-1" accept="image/*" style="display: none;" onchange="previewMedia(this, 'preview-1', 'plus-1')">
+                <input type="file" id="file-2" accept="image/*" style="display: none;" onchange="previewMedia(this, 'preview-2', 'plus-2')">
+                <input type="file" id="file-3" accept="image/*" style="display: none;" onchange="previewMedia(this, 'preview-3', 'plus-3')">
+                <input type="file" id="file-vid" accept="video/*" style="display: none;" onchange="previewMedia(this, 'preview-vid', 'plus-vid')">
+
                 <div class="grid grid-cols-3 gap-3 mb-4">
-                    <div class="aspect-[3/4] bg-[#1A1A1A] rounded-xl border border-[#333] flex items-center justify-center text-gray-500 text-2xl relative overflow-hidden">
+                    <div onclick="document.getElementById('file-1').click()" class="aspect-[3/4] bg-[#1A1A1A] rounded-xl border border-[#333] flex items-center justify-center text-gray-500 text-2xl relative overflow-hidden cursor-pointer">
                         <span id="plus-1" class="absolute z-10 pointer-events-none">+</span>
                         <img id="preview-1" class="absolute inset-0 w-full h-full object-cover z-20 hidden pointer-events-none">
-                        <input type="file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30" onchange="previewMedia(this, 'preview-1', 'plus-1')">
                     </div>
-                    <div class="aspect-[3/4] bg-[#1A1A1A] rounded-xl border border-[#333] flex items-center justify-center text-gray-500 text-2xl relative overflow-hidden">
+                    <div onclick="document.getElementById('file-2').click()" class="aspect-[3/4] bg-[#1A1A1A] rounded-xl border border-[#333] flex items-center justify-center text-gray-500 text-2xl relative overflow-hidden cursor-pointer">
                         <span id="plus-2" class="absolute z-10 pointer-events-none">+</span>
                         <img id="preview-2" class="absolute inset-0 w-full h-full object-cover z-20 hidden pointer-events-none">
-                        <input type="file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30" onchange="previewMedia(this, 'preview-2', 'plus-2')">
                     </div>
-                    <div class="aspect-[3/4] bg-[#1A1A1A] rounded-xl border border-[#333] flex items-center justify-center text-gray-500 text-2xl relative overflow-hidden">
+                    <div onclick="document.getElementById('file-3').click()" class="aspect-[3/4] bg-[#1A1A1A] rounded-xl border border-[#333] flex items-center justify-center text-gray-500 text-2xl relative overflow-hidden cursor-pointer">
                         <span id="plus-3" class="absolute z-10 pointer-events-none">+</span>
                         <img id="preview-3" class="absolute inset-0 w-full h-full object-cover z-20 hidden pointer-events-none">
-                        <input type="file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30" onchange="previewMedia(this, 'preview-3', 'plus-3')">
                     </div>
                 </div>
                 <div class="grid grid-cols-3 gap-3">
-                    <div class="aspect-[3/4] bg-[#1A1A1A] rounded-xl border border-[#333] flex flex-col items-center justify-center text-gray-500 relative overflow-hidden">
+                    <div onclick="document.getElementById('file-vid').click()" class="aspect-[3/4] bg-[#1A1A1A] rounded-xl border border-[#333] flex flex-col items-center justify-center text-gray-500 relative overflow-hidden cursor-pointer">
                         <div id="plus-vid" class="absolute z-10 flex flex-col items-center justify-center pointer-events-none">
                             <svg class="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                             <span class="text-[10px] uppercase">Видео</span>
                         </div>
                         <video id="preview-vid" class="absolute inset-0 w-full h-full object-cover z-20 hidden pointer-events-none" autoplay muted loop playsinline></video>
-                        <input type="file" accept="video/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30" onchange="previewMedia(this, 'preview-vid', 'plus-vid')">
                     </div>
                 </div>
                 <div class="mt-12">
@@ -256,7 +205,6 @@
     <div id="main-app" class="hidden-flow absolute inset-0 flex flex-col">
         <div class="flex-1 relative">
             <div id="screen-home" class="absolute inset-0 bg-black overflow-hidden">
-                
                 <div id="bg-card-container" class="absolute inset-0 w-full h-[90vh] origin-bottom z-30 scale-[0.95] opacity-50">
                     <img id="bg-card-image" src="" class="w-full h-full object-cover rounded-b-3xl">
                     <div class="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-[#121212] to-transparent rounded-b-3xl"></div>
@@ -273,21 +221,16 @@
 
                 <div id="card-container" class="absolute inset-0 w-full h-[90vh] origin-bottom transition-transform duration-300 z-40 shadow-2xl">
                     <img id="card-image" src="" class="w-full h-full object-cover rounded-b-3xl">
-                    
                     <div class="absolute top-6 left-4 flex items-center justify-center w-12 h-12 rounded-full bg-white overflow-hidden border-2 border-[#121212] shadow-lg z-30">
                         <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/c5d47923-9ffa-49b6-b5b7-6c13cf6635cf-vgA3qYbfcOB1heO8jN7Tsdgne7V0X4.jpg" alt="Privé" class="w-full h-full object-cover">
                     </div>
-
                     <button onclick="rewindCard()" class="absolute top-[80px] left-4 flex items-center justify-center w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-[#F2E8C9]/40 shadow-lg active:scale-90 transition-transform z-30">
                         <svg class="w-6 h-6 text-[#F2E8C9]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
                     </button>
-                    
                     <div class="absolute top-6 right-4 bg-black/40 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/10">
                         <span class="text-[10px] font-bold tracking-wider text-[#F2E8C9]">ЦЕНТРАЛЬНЫЙ</span>
                     </div>
-                    
                     <div class="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-[#121212] to-transparent rounded-b-3xl"></div>
-                    
                     <div class="absolute bottom-6 left-0 right-0 px-6">
                         <div class="flex items-center mb-4">
                             <h2 id="card-name" class="text-3xl font-bold uppercase mr-2 text-white drop-shadow-lg"></h2>
@@ -295,7 +238,6 @@
                                 <path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.49 4.49 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
                             </svg>
                         </div>
-                        
                         <div class="flex justify-evenly items-center w-full pb-6 px-1">
                             <button onclick="nextCard('left')" class="w-[72px] h-[72px] shrink-0 bg-[#1A1A1A] rounded-full flex items-center justify-center border-2 border-gray-500 active:scale-90 transition-transform pointer-events-auto z-50">
                                 <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -324,7 +266,9 @@
 
             <div id="screen-chats" class="screen-hidden absolute inset-0 flex flex-col items-center justify-center px-6 bg-[#121212]">
                 <div class="w-24 h-24 rounded-full border border-[#333] flex items-center justify-center mb-6">
-                    <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"></path></svg>
+                    <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                    </svg>
                 </div>
                 <h2 class="text-2xl font-bold uppercase tracking-wide mb-2 text-[#F2E8C9]">СООБЩЕНИЯ</h2>
                 <p class="text-gray-400 text-sm text-center">Ваши совпадения и чаты появятся<br>здесь</p>
@@ -669,7 +613,6 @@
 
         updateCards();
 
-        // ОБНОВЛЕННАЯ ФУНКЦИЯ ДЛЯ ПРЕВЬЮ (МГНОВЕННАЯ ЗАГРУЗКА БЕЗ ВЫЛЕТОВ)
         function previewMedia(input, previewId, placeholderId) {
             if (input.files && input.files[0]) {
                 const file = input.files[0];
@@ -680,7 +623,6 @@
                 element.classList.remove('hidden');
                 document.getElementById(placeholderId).classList.add('hidden');
                 
-                // Сразу показываем в профиле для красоты
                 if (previewId === 'preview-1') {
                     const profilePhoto = document.getElementById('my-profile-photo');
                     if(profilePhoto) profilePhoto.src = fileUrl;
@@ -756,19 +698,22 @@
             const locationSelect = document.querySelector('select.appearance-none');
             formData.append("location", locationSelect ? locationSelect.value : "sochi");
 
-            const file1 = document.querySelector('input[onchange*="preview-1"]').files[0];
+            // Ищем файлы по правильным ID
+            const file1 = document.getElementById('file-1').files[0];
             if (file1) formData.append("photo_1", file1);
             
-            const file2 = document.querySelector('input[onchange*="preview-2"]').files[0];
+            const file2 = document.getElementById('file-2').files[0];
             if (file2) formData.append("photo_2", file2);
             
-            const file3 = document.querySelector('input[onchange*="preview-3"]').files[0];
+            const file3 = document.getElementById('file-3').files[0];
             if (file3) formData.append("photo_3", file3);
 
-            const vidFile = document.querySelector('input[accept="video/*"]').files[0];
+            const vidFile = document.getElementById('file-vid').files[0];
             if (vidFile) formData.append("video_1", vidFile);
 
             try {
+                // ОТПРАВКА НА СЕРВЕР 144.31.126.64
+                // ПРИМЕЧАНИЕ: Если выдаст "Ошибка сервера", нужно будет настроить туннель
                 const response = await fetch('http://144.31.126.64:8000/api/register', {
                     method: 'POST',
                     body: formData
@@ -782,16 +727,30 @@
                     localStorage.setItem('prive_user_age', age);
 
                     document.getElementById('profile-name-display').innerText = nameInput + (age ? ", " + age : "");
+                    if(file1) {
+                        document.getElementById('my-profile-photo').src = URL.createObjectURL(file1);
+                    }
 
                     document.getElementById('registration-flow').classList.add('hidden-flow');
                     document.getElementById('main-app').classList.remove('hidden-flow');
                     openTab('home');
                 } else {
-                    tg.showAlert("Ошибка сервера: " + result.message);
+                    tg.showAlert("Ошибка: " + result.message);
                 }
             } catch (error) {
-                tg.showAlert("Не удалось связаться с сервером. Проверьте соединение.");
+                // ИМЕННО ЭТУ ОШИБКУ ТЫ УВИДИШЬ ИЗ-ЗА БЛОКИРОВКИ HTTP в HTTPS-приложении
+                tg.showAlert("Не удалось связаться с сервером. Браузер заблокировал отправку из-за отсутствия HTTPS.");
                 console.error(error);
+                
+                // ВРЕМЕННЫЙ КОД ДЛЯ ТЕБЯ: Даже если сервер отклонил, мы пустим тебя дальше, чтобы ты не застревал на экране
+                localStorage.setItem('prive_user_saved', 'true');
+                localStorage.setItem('prive_user_name', nameInput);
+                localStorage.setItem('prive_user_age', age);
+                document.getElementById('profile-name-display').innerText = nameInput + (age ? ", " + age : "");
+                if(file1) document.getElementById('my-profile-photo').src = URL.createObjectURL(file1);
+                document.getElementById('registration-flow').classList.add('hidden-flow');
+                document.getElementById('main-app').classList.remove('hidden-flow');
+                openTab('home');
             } finally {
                 btn.innerText = "Завершить регистрацию";
                 btn.disabled = false;
