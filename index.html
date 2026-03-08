@@ -109,7 +109,8 @@
         .leaflet-control-zoom-in,
         .leaflet-control-zoom-out,
         .leaflet-control-attribution {
-            filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+            /* Обновленный фильтр: Тёмно-серая карта с теплым бежевым оттенком (сепия) */
+            filter: invert(100%) grayscale(100%) sepia(20%) brightness(85%) contrast(110%);
         }
         .leaflet-container {
             background-color: #121212 !important;
@@ -132,13 +133,12 @@
             text-align: center;
         }
         
-        /* ИСПРАВЛЕННЫЙ КЛАСС: Выравниваем иконку идеально по центру */
         .custom-map-marker {
-            background: transparent !important; /* Убираем стандартный фон Leaflet */
-            border: none !important; /* Убираем стандартную границу Leaflet */
-            display: flex !important; /* Превращаем в flex-контейнер */
-            align-items: center !important; /* Центрируем вложенный div по вертикали */
-            justify-content: center !important; /* Центрируем вложенный div по горизонтали */
+            background: transparent !important; 
+            border: none !important; 
+            display: flex !important; 
+            align-items: center !important; 
+            justify-content: center !important; 
         }
     </style>
 </head>
@@ -269,7 +269,7 @@
                     <div class="absolute bottom-6 left-0 right-0 px-6">
                         <div class="flex items-center mb-4">
                             <h2 id="bg-card-name" class="text-3xl font-bold uppercase mr-2 text-white drop-shadow-lg"></h2>
-                            <svg class="w-6 h-6 text-[#F2E8C9] drop-shadow-md" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <svg class="w-6 h-6 text-[#F2E8C9] drop-shadow-md" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
                         </div>
                         <div class="h-[72px] pb-6 px-1"></div> 
                     </div>
@@ -295,7 +295,7 @@
                     <div class="absolute bottom-6 left-0 right-0 px-6">
                         <div class="flex items-center mb-4">
                             <h2 id="card-name" class="text-3xl font-bold uppercase mr-2 text-white drop-shadow-lg"></h2>
-                            <svg class="w-6 h-6 text-[#F2E8C9] drop-shadow-md" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <svg class="w-6 h-6 text-[#F2E8C9] drop-shadow-md" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
                         </div>
                         
                         <div class="flex justify-evenly items-center w-full pb-6 px-1">
@@ -326,7 +326,7 @@
 
             <div id="screen-chats" class="screen-hidden absolute inset-0 flex flex-col items-center justify-center px-6 bg-[#121212]">
                 <div class="w-24 h-24 rounded-full border border-[#333] flex items-center justify-center mb-6">
-                    <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 013 8v.5z"></path></svg>
+                    <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"></path></svg>
                 </div>
                 <h2 class="text-2xl font-bold uppercase tracking-wide mb-2 text-[#F2E8C9]">СООБЩЕНИЯ</h2>
                 <p class="text-gray-400 text-sm text-center">Ваши совпадения и чаты появятся<br>здесь</p>
@@ -343,7 +343,7 @@
                     </div>
                     <div class="flex items-center">
                         <h2 id="profile-name-display" class="text-2xl font-bold text-white mr-1">Имя, Возраст</h2>
-                        <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
                     </div>
                 </div>
 
@@ -731,12 +731,18 @@
             }
         }
 
-        function finishRegistration() {
+        async function finishRegistration() {
+            const btn = document.getElementById('btn-finish-reg');
+            btn.innerText = "Загрузка..."; 
+            btn.disabled = true;
+
             const nameInput = document.getElementById('user-name-input').value;
             const dobInput = document.getElementById('user-age-input').value;
-
+            
             if(!nameInput) {
                 tg.showAlert("Пожалуйста, введите имя!");
+                btn.innerText = "Завершить регистрацию";
+                btn.disabled = false;
                 return;
             }
 
@@ -751,20 +757,67 @@
                 }
             }
 
-            localStorage.setItem('prive_user_saved', 'true');
-            localStorage.setItem('prive_user_name', nameInput);
-            if(age) localStorage.setItem('prive_user_age', age);
-
-            document.getElementById('profile-name-display').innerText = nameInput + (age ? ", " + age : "");
-            const savedPhoto = localStorage.getItem('prive_user_photo');
-            if(savedPhoto) {
-                document.getElementById('my-profile-photo').src = savedPhoto;
+            let tg_id = 0;
+            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                tg_id = tg.initDataUnsafe.user.id;
+            } else {
+                tg_id = Math.floor(Math.random() * 1000000); 
             }
 
-            document.getElementById('registration-flow').classList.add('hidden-flow');
-            document.getElementById('main-app').classList.remove('hidden-flow');
+            const formData = new FormData();
+            formData.append("tg_id", tg_id);
+            formData.append("name", nameInput);
+            formData.append("age", age || 18); 
             
-            openTab('home');
+            const genderBtn = document.querySelector('.gender-btn.active');
+            formData.append("gender", genderBtn ? genderBtn.innerText : "Мужской");
+            
+            const locationSelect = document.querySelector('select.appearance-none');
+            formData.append("location", locationSelect ? locationSelect.value : "sochi");
+
+            const file1 = document.querySelector('input[onchange*="preview-1"]').files[0];
+            if (file1) formData.append("photo_1", file1);
+            
+            const file2 = document.querySelector('input[onchange*="preview-2"]').files[0];
+            if (file2) formData.append("photo_2", file2);
+            
+            const file3 = document.querySelector('input[onchange*="preview-3"]').files[0];
+            if (file3) formData.append("photo_3", file3);
+
+            const vidFile = document.querySelector('input[accept="video/*"]').files[0];
+            if (vidFile) formData.append("video_1", vidFile);
+
+            try {
+                const response = await fetch('http://144.31.126.64:8000/api/register', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (result.status === "success" || result.status === "ok") {
+                    localStorage.setItem('prive_user_saved', 'true');
+                    localStorage.setItem('prive_user_name', nameInput);
+                    localStorage.setItem('prive_user_age', age);
+
+                    document.getElementById('profile-name-display').innerText = nameInput + (age ? ", " + age : "");
+                    if(file1) {
+                        document.getElementById('my-profile-photo').src = URL.createObjectURL(file1);
+                    }
+
+                    document.getElementById('registration-flow').classList.add('hidden-flow');
+                    document.getElementById('main-app').classList.remove('hidden-flow');
+                    openTab('home');
+                } else {
+                    tg.showAlert("Ошибка сервера: " + result.message);
+                }
+            } catch (error) {
+                tg.showAlert("Не удалось связаться с сервером. Проверьте соединение.");
+                console.error(error);
+            } finally {
+                btn.innerText = "Завершить регистрацию";
+                btn.disabled = false;
+            }
         }
 
         function editProfile() {
