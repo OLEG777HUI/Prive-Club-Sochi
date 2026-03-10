@@ -1434,10 +1434,29 @@ input[type=range]::-webkit-slider-thumb {
 
 // ── Telegram WebApp init ──
 const tg = window.Telegram?.WebApp;
-if (tg) { tg.expand(); tg.setBackgroundColor('#0E0E0E'); tg.setHeaderColor('#0E0E0E'); }
+if (tg) {
+  tg.expand();
+  tg.setBackgroundColor('#0E0E0E');
+  tg.setHeaderColor('#0E0E0E');
+  // Извлекаем ID пользователя из Telegram initData
+  const tgUser = tg.initDataUnsafe?.user;
+  if (tgUser?.id) {
+    STATE.myTgId = tgUser.id;
+    // Если имя не сохранено локально — берём из Telegram
+    if (!localStorage.getItem('prive_user_name') && tgUser.first_name) {
+      // Запишем как подсказку на первый шаг регистрации
+      document.addEventListener('DOMContentLoaded', () => {
+        const nameInp = document.getElementById('reg-name');
+        if (nameInp && !nameInp.value) nameInp.value = tgUser.first_name;
+      });
+    }
+  }
+}
 
 // ── App State ──
 const STATE = {
+  myTgId: null,            // Telegram user ID (из initData)
+  activeMatchDbId: null,   // реальный ID матча из базы для чата
   currentProfileIndex: 0,
   currentRegStep: 1,
   isEditing: false,
@@ -1492,8 +1511,25 @@ function showMainApp() {
   document.getElementById('main-app').classList.remove('hidden');
   document.getElementById('profile-name-display').textContent = STATE.myName + (STATE.myAge ? ', ' + STATE.myAge : '');
   if (STATE.myPhoto) document.getElementById('my-profile-photo').src = STATE.myPhoto;
+  // Синхронизируем статус подписки с сервером
+  if (STATE.myTgId) syncSubscriptionStatus();
   openTab('home');
   updateStats();
+}
+
+async function syncSubscriptionStatus() {
+  try {
+    const res = await fetch(
+      `https://priveclubgroup.ru/api/subscription/status?tg_id=${STATE.myTgId}`
+    );
+    const data = await res.json();
+    if (data.status === 'success') {
+      STATE.isPremium = data.is_premium;
+      STATE.isElite = data.is_elite;
+      localStorage.setItem('prive_premium', data.is_premium ? 'true' : 'false');
+      localStorage.setItem('prive_elite', data.is_elite ? 'true' : 'false');
+    }
+  } catch(e) { /* используем localStorage как fallback */ }
 }
 
 function injectLogos() {
@@ -1526,7 +1562,11 @@ function injectLogos() {
 // ════════════════════════════════════════════════════════
 async function loadProfiles() {
   try {
-    const res = await fetch('https://priveclubgroup.ru/api/feed');
+    const tgId = STATE.myTgId || '';
+    const url = tgId
+      ? `https://priveclubgroup.ru/api/feed?tg_id=${tgId}&limit=30`
+      : 'https://priveclubgroup.ru/api/feed?limit=30';
+    const res = await fetch(url);
     const data = await res.json();
     if (data.status === 'success' && data.profiles?.length) {
       STATE.profiles = data.profiles;
@@ -1534,7 +1574,8 @@ async function loadProfiles() {
       updateCards();
       return;
     }
-  } catch(e) {}
+  } catch(e) { console.warn('[loadProfiles]', e); }
+  // Fallback to demo if server unreachable
   STATE.profiles = [...DEMO_PROFILES];
   STATE.currentProfileIndex = 0;
   updateCards();
@@ -1544,9 +1585,8 @@ function reloadFeed() {
   document.getElementById('home-empty').classList.add('hidden');
   document.getElementById('card-container').classList.remove('hidden');
   document.getElementById('bg-card-container').classList.remove('hidden');
-  STATE.profiles = [...DEMO_PROFILES];
   STATE.currentProfileIndex = 0;
-  updateCards();
+  loadProfiles();
   showToast('Лента обновлена');
 }
 
@@ -1677,22 +1717,44 @@ function nextCard(direction) {
   }, 320);
 }
 
-function recordLike(p) {
-  if (!p) return;
-  // 30% chance of mutual match in demo
-  const isMutual = Math.random() < 0.3;
-  if (isMutual) {
-    setTimeout(() => triggerMatch(p), 500);
-  } else {
-    // add to their likes count visually
+async function recordLike(p) {
+  if (!p || !STATE.myTgId) return;
+  try {
+    const fd = new FormData();
+    fd.append('from_id', STATE.myTgId);
+    fd.append('to_id', p.id);
+    fd.append('action', 'like');
+    const res = await fetch('https://priveclubgroup.ru/api/swipe', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (data.match && data.partner) {
+      setTimeout(() => triggerMatch({ ...p, ...data.partner, matchId: data.match_id }), 500);
+    }
+  } catch(e) {
+    // Demo fallback
+    if (Math.random() < 0.3) setTimeout(() => triggerMatch(p), 500);
   }
 }
 
-function recordSuperLike(p) {
+async function recordSuperLike(p) {
   if (!p) return;
   showToast('⭐ Суперлайк отправлен ' + p.name);
-  const isMutual = Math.random() < 0.6;
-  if (isMutual) setTimeout(() => triggerMatch(p), 600);
+  if (!STATE.myTgId) {
+    if (Math.random() < 0.6) setTimeout(() => triggerMatch(p), 600);
+    return;
+  }
+  try {
+    const fd = new FormData();
+    fd.append('from_id', STATE.myTgId);
+    fd.append('to_id', p.id);
+    fd.append('action', 'superlike');
+    const res = await fetch('https://priveclubgroup.ru/api/swipe', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (data.match && data.partner) {
+      setTimeout(() => triggerMatch({ ...p, ...data.partner, matchId: data.match_id }), 600);
+    }
+  } catch(e) {
+    if (Math.random() < 0.6) setTimeout(() => triggerMatch(p), 600);
+  }
 }
 
 function rewindCard() {
@@ -1716,7 +1778,7 @@ function rewindCard() {
 // ════════════════════════════════════════════════════════
 function triggerMatch(p) {
   const matchId = 'match_' + p.id + '_' + Date.now();
-  STATE.matches.push({ id: matchId, name: p.name, age: p.age, img: p.img, imgs: p.imgs || [p.img] });
+  STATE.matches.push({ id: matchId, dbMatchId: p.matchId || null, name: p.name, age: p.age, img: p.img, imgs: p.imgs || [p.img] });
   STATE.chats[matchId] = [];
   document.getElementById('match-their-photo').src = p.img;
   document.getElementById('match-my-photo').src = STATE.myPhoto || 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=200&auto=format&fit=crop';
@@ -1741,10 +1803,33 @@ function openMatchChat() {
 // ════════════════════════════════════════════════════════
 //  FULL CHAT
 // ════════════════════════════════════════════════════════
+async function loadChatHistory(dbMatchId) {
+  try {
+    const res = await fetch(
+      `https://priveclubgroup.ru/api/messages/${dbMatchId}?tg_id=${STATE.myTgId}`
+    );
+    const data = await res.json();
+    if (data.status === 'success' && data.messages) {
+      STATE.chats[STATE.activeChatId] = data.messages.map(m => ({
+        text: m.text,
+        from: m.from,
+        time: m.time,
+      }));
+      renderFChatMessages();
+    }
+  } catch(e) { console.warn('[loadChatHistory]', e); }
+}
+
 function openFullChat(matchId) {
   const match = STATE.matches.find(m => m.id === matchId);
   if (!match) return;
   STATE.activeChatId = matchId;
+  // Сохраняем реальный ID матча из базы (если он есть)
+  STATE.activeMatchDbId = match.dbMatchId || null;
+  // Если есть реальный matchId — подгружаем историю сообщений
+  if (match.dbMatchId && STATE.myTgId) {
+    loadChatHistory(match.dbMatchId);
+  }
   document.getElementById('fchat-avatar').src = match.img;
   document.getElementById('fchat-name').textContent = match.name + ', ' + match.age;
   document.getElementById('fchat-status').textContent = 'онлайн';
