@@ -1519,9 +1519,7 @@ function showMainApp() {
 
 async function syncSubscriptionStatus() {
   try {
-    const res = await fetch(
-      `https://priveclubgroup.ru/api/subscription/status?tg_id=${STATE.myTgId}`
-    );
+    const res = await fetch(`https://priveclubgroup.ru/api/subscription/status?tg_id=${STATE.myTgId}`);
     const data = await res.json();
     if (data.status === 'success') {
       STATE.isPremium = data.is_premium;
