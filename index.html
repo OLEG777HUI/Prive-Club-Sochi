@@ -711,27 +711,27 @@ input[type=range]::-webkit-slider-thumb {
         <div class="photo-slot">
           <div class="plus-icon" id="plus-1"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg></div>
           <img id="preview-1" class="hidden">
-          <input type="file" accept="image/*" onchange="previewMedia(this,'preview-1','plus-1')">
+          <input id="file-1" type="file" accept="image/*" onchange="previewMedia(this,'preview-1','plus-1')">
         </div>
         <div class="photo-slot">
           <div class="plus-icon" id="plus-2"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg></div>
           <img id="preview-2" class="hidden">
-          <input type="file" accept="image/*" onchange="previewMedia(this,'preview-2','plus-2')">
+          <input id="file-2" type="file" accept="image/*" onchange="previewMedia(this,'preview-2','plus-2')">
         </div>
         <div class="photo-slot">
           <div class="plus-icon" id="plus-3"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg></div>
           <img id="preview-3" class="hidden">
-          <input type="file" accept="image/*" onchange="previewMedia(this,'preview-3','plus-3')">
+          <input id="file-3" type="file" accept="image/*" onchange="previewMedia(this,'preview-3','plus-3')">
         </div>
         <div class="photo-slot">
           <div class="plus-icon" id="plus-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg></div>
           <img id="preview-4" class="hidden">
-          <input type="file" accept="image/*" onchange="previewMedia(this,'preview-4','plus-4')">
+          <input id="file-4" type="file" accept="image/*" onchange="previewMedia(this,'preview-4','plus-4')">
         </div>
         <div class="photo-slot">
           <div class="plus-icon" id="plus-5"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg></div>
           <img id="preview-5" class="hidden">
-          <input type="file" accept="image/*" onchange="previewMedia(this,'preview-5','plus-5')">
+          <input id="file-5" type="file" accept="image/*" onchange="previewMedia(this,'preview-5','plus-5')">
         </div>
         <div class="photo-slot">
           <div class="plus-icon" id="plus-vid">
@@ -739,7 +739,7 @@ input[type=range]::-webkit-slider-thumb {
             <span class="text-[10px] uppercase tracking-wider">Видео</span>
           </div>
           <video id="preview-vid" class="hidden" autoplay muted loop playsinline></video>
-          <input type="file" accept="video/*" onchange="previewMedia(this,'preview-vid','plus-vid')">
+          <input id="file-vid" type="file" accept="video/*" onchange="previewMedia(this,'preview-vid','plus-vid')">
         </div>
       </div>
       <div class="mt-10">
@@ -809,8 +809,8 @@ input[type=range]::-webkit-slider-thumb {
     <!-- Empty state -->
     <div id="home-empty" class="hidden absolute inset-0 flex flex-col items-center justify-center px-8 text-center z-50">
       <div class="font-display text-6xl mb-4">✦</div>
-      <h3 class="font-display text-2xl font-bold text-[var(--gold)] mb-2">Анкеты закончились</h3>
-      <p class="text-[var(--muted2)] text-sm leading-relaxed mb-8">Вы просмотрели всех резидентов<br>в вашем радиусе поиска</p>
+      <h3 class="font-display text-2xl font-bold text-[var(--gold)] mb-2">Резидентов пока нет</h3>
+      <p class="text-[var(--muted2)] text-sm leading-relaxed mb-8">Новые участники скоро появятся —<br>загляните позже</p>
       <button onclick="reloadFeed()" class="btn-gold" style="max-width:200px">Обновить</button>
     </div>
   </div>
@@ -1246,6 +1246,26 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 </div>
 
+<!-- REPORT SUBSCREEN -->
+<div id="subscreen-report" class="hidden fixed inset-0 z-[110] bg-[var(--bg)] flex flex-col" style="padding-top:env(safe-area-inset-top)">
+  <div class="px-5 py-4 flex items-center border-b border-[var(--border)]">
+    <button onclick="closeSubScreen('report')" class="text-[var(--gold)] p-2 -ml-2 mr-2">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <span class="font-bold text-base uppercase tracking-wider">Пожаловаться</span>
+  </div>
+  <div class="flex-1 scrollable px-5 py-6">
+    <p class="text-[var(--muted2)] text-sm mb-5 leading-relaxed">Выберите причину жалобы. Мы рассмотрим её в течение 24 часов.</p>
+    <div class="bg-[var(--surface)] rounded-2xl overflow-hidden border border-[var(--border)] mb-4">
+      <div class="menu-item" onclick="submitReport('Фейковый профиль')"><span class="text-sm">Фейковый профиль</span><svg class="w-4 h-4 text-[var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>
+      <div class="menu-item" onclick="submitReport('Неприемлемые фото')"><span class="text-sm">Неприемлемые фото</span><svg class="w-4 h-4 text-[var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>
+      <div class="menu-item" onclick="submitReport('Оскорбительное поведение')"><span class="text-sm">Оскорбительное поведение</span><svg class="w-4 h-4 text-[var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>
+      <div class="menu-item" onclick="submitReport('Мошенничество')"><span class="text-sm">Мошенничество / Скам</span><svg class="w-4 h-4 text-[var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>
+      <div class="menu-item" onclick="submitReport('Другое')"><span class="text-sm">Другое</span><svg class="w-4 h-4 text-[var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>
+    </div>
+  </div>
+</div>
+
 <!-- PREMIUM SUBSCREEN -->
 <div id="subscreen-premium" class="hidden fixed inset-0 z-[110] bg-[var(--bg)] flex flex-col" style="padding-top:env(safe-area-inset-top)">
   <div class="px-5 py-4 flex items-center border-b border-[var(--border)] bg-[var(--surface)]">
@@ -1452,14 +1472,8 @@ const STATE = {
   swipeCount: 0,
 };
 
-// ── Demo Profiles ──
-const DEMO_PROFILES = [
-  { id: 1, name: "Анастасия", age: 24, img: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=600&auto=format&fit=crop", imgs: ["https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=600&auto=format&fit=crop","https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=600&auto=format&fit=crop"], job: "Дизайнер интерьеров", height: 168, bio: "Обожаю море и горы. Занимаюсь йогой и путешествую при каждой возможности.", interests: ["Йога", "Путешествия", "Art"], district: "ЦЕНТРАЛЬНЫЙ", lat: 43.585, lng: 39.723 },
-  { id: 2, name: "Виктория", age: 27, img: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=600&auto=format&fit=crop", imgs: ["https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=600&auto=format&fit=crop"], job: "Маркетолог", height: 172, bio: "Люблю хорошую кухню, jazz и тихие вечера на набережной.", interests: ["Jazz", "Гастрономия", "Теннис"], district: "ХОСТИНСКИЙ", lat: 43.561, lng: 39.725 },
-  { id: 3, name: "Диана", age: 26, img: "https://images.unsplash.com/photo-1488716820095-cbe80883c496?q=80&w=600&auto=format&fit=crop", imgs: ["https://images.unsplash.com/photo-1488716820095-cbe80883c496?q=80&w=600&auto=format&fit=crop","https://images.unsplash.com/photo-1515023115689-589c33041d3c?q=80&w=600&auto=format&fit=crop"], job: "Предприниматель", height: 165, bio: "Владею небольшим бизнесом. Ценю искренних людей и качественный отдых.", interests: ["Бизнес", "Wine", "Спорт"], district: "АДЛЕРСКИЙ", lat: 43.445, lng: 39.917 },
-  { id: 4, name: "Полина", age: 23, img: "https://images.unsplash.com/photo-1502767089025-6572583495b9?q=80&w=600&auto=format&fit=crop", imgs: ["https://images.unsplash.com/photo-1502767089025-6572583495b9?q=80&w=600&auto=format&fit=crop"], job: "Фотограф", height: 170, bio: "Снимаю людей и пейзажи. Ищу компанию для вылазок на природу.", interests: ["Фото", "Nature", "Кино"], district: "ЛАЗАРЕВСКИЙ", lat: 43.697, lng: 39.357 },
-  { id: 5, name: "Мария", age: 29, img: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=600&auto=format&fit=crop", imgs: ["https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=600&auto=format&fit=crop"], job: "Врач-терапевт", height: 166, bio: "Работа в медицине научила ценить каждый момент. Обожаю горные прогулки.", interests: ["Медицина", "Hiking", "Чтение"], district: "ЦЕНТРАЛЬНЫЙ", lat: 43.590, lng: 39.731 },
-];
+// ── Demo Profiles — REMOVED. Only real profiles from server ──
+const DEMO_PROFILES = []; // kept as empty fallback
 
 const INTERESTS = ["Путешествия","Спорт","Йога","Теннис","Гольф","Серфинг","Skiing","Art","Музыка","Jazz","Гастрономия","Wine","Фото","Кино","Бизнес","IT","Чтение","Nature","Hiking","Танцы"];
 
@@ -1474,7 +1488,7 @@ if (tg) {
     STATE.myTgId = tgUser.id;
     if (!localStorage.getItem('prive_user_name') && tgUser.first_name) {
       document.addEventListener('DOMContentLoaded', () => {
-        const nameInp = document.getElementById('reg-name');
+        const nameInp = document.getElementById('user-name-input');
         if (nameInp && !nameInp.value) nameInp.value = tgUser.first_name;
       });
     }
@@ -1508,8 +1522,10 @@ function showMainApp() {
   document.getElementById('main-app').classList.remove('hidden');
   document.getElementById('profile-name-display').textContent = STATE.myName + (STATE.myAge ? ', ' + STATE.myAge : '');
   if (STATE.myPhoto) document.getElementById('my-profile-photo').src = STATE.myPhoto;
-  // Синхронизируем статус подписки с сервером
-  if (STATE.myTgId) syncSubscriptionStatus();
+  if (STATE.myTgId) {
+    syncSubscriptionStatus();
+    loadRealLikes();
+  }
   openTab('home');
   updateStats();
 }
@@ -1570,10 +1586,9 @@ async function loadProfiles() {
       return;
     }
   } catch(e) { console.warn('[loadProfiles]', e); }
-  // Fallback to demo if server unreachable
-  STATE.profiles = [...DEMO_PROFILES];
-  STATE.currentProfileIndex = 0;
-  updateCards();
+  // Нет анкет — показываем пустой экран
+  STATE.profiles = [];
+  showEmptyFeed();
 }
 
 function reloadFeed() {
@@ -1807,7 +1822,7 @@ async function loadChatHistory(dbMatchId) {
     if (data.status === 'success' && data.messages) {
       STATE.chats[STATE.activeChatId] = data.messages.map(m => ({
         text: m.text,
-        from: m.from,
+        from: (String(m.from) === String(STATE.myTgId) || m.from === 'me') ? 'me' : 'them',
         time: m.time,
       }));
       renderFChatMessages();
@@ -1870,19 +1885,34 @@ function sendFChatMessage() {
   STATE.chats[STATE.activeChatId] = STATE.chats[STATE.activeChatId] || [];
   STATE.chats[STATE.activeChatId].push({ text, from: 'me', time });
   renderFChatMessages();
-  // Simulate reply after delay
+  // Отправляем сообщение на сервер
   const match = STATE.matches.find(m => m.id === STATE.activeChatId);
-  if (match) {
-    const replies = ['Привет! 😊', 'Интересно!', 'Расскажи подробнее?', 'Отличная идея!', '✨', 'Согласна!', 'Хм, надо подумать...', 'Когда свободен?'];
-    setTimeout(() => {
-      const r = replies[Math.floor(Math.random() * replies.length)];
-      const t2 = new Date();
-      STATE.chats[STATE.activeChatId].push({ text: r, from: 'them', time: t2.getHours().toString().padStart(2,'0') + ':' + t2.getMinutes().toString().padStart(2,'0') });
-      renderFChatMessages();
-      updateNavBadge('chats', 1);
-      renderChatList();
-    }, 1500 + Math.random() * 2000);
+  if (match && match.dbMatchId && STATE.myTgId) {
+    const fd = new FormData();
+    fd.append('match_id', match.dbMatchId);
+    fd.append('tg_id', STATE.myTgId);
+    fd.append('text', text);
+    fetch('https://priveclubgroup.ru/api/messages', { method: 'POST', body: fd })
+      .catch(e => console.warn('[sendMsg]', e));
   }
+  renderChatList();
+}
+
+// Загружаем реальные лайки с сервера
+async function loadRealLikes() {
+  if (!STATE.myTgId) return;
+  try {
+    const res = await fetch(`https://priveclubgroup.ru/api/likes?tg_id=${STATE.myTgId}`);
+    const data = await res.json();
+    if (data.status === 'success' && data.likes?.length) {
+      STATE.likedProfiles = data.likes.map(l => ({
+        name: l.name, age: l.age, img: l.img || l.photo
+      }));
+      renderLikesScreen();
+      updateNavBadge('likes', STATE.likedProfiles.length);
+      updateStats();
+    }
+  } catch(e) { console.warn('[loadRealLikes]', e); }
 }
 
 function autoResize(el) {
@@ -1963,21 +1993,8 @@ function openLikeProfile(i) {
   openProfileView({ name: lp.name, age: lp.age, img: lp.img, imgs: [lp.img], bio: '', job: '', interests: [] });
 }
 
-// Simulate receiving likes periodically
-function simulateLikes() {
-  setInterval(() => {
-    if (Math.random() < 0.15 && STATE.profiles.length) {
-      const p = STATE.profiles[Math.floor(Math.random() * STATE.profiles.length)];
-      const alreadyLiked = STATE.likedProfiles.find(l => l.name === p.name);
-      if (!alreadyLiked) {
-        STATE.likedProfiles.push({ name: p.name, age: p.age, img: p.img });
-        renderLikesScreen();
-        updateNavBadge('likes', STATE.likedProfiles.length);
-        updateStats();
-      }
-    }
-  }, 25000);
-}
+// simulateLikes — убрана: лайки приходят с реального сервера через /api/feed
+function simulateLikes() { /* no-op: real likes from server */ }
 
 // ════════════════════════════════════════════════════════
 //  PROFILE VIEW (full card)
@@ -2230,7 +2247,8 @@ function toggleInterest(btn, interest) {
 }
 
 function selectGender(btn) {
-  document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('active'));
+  // Only affect gender buttons (siblings in same parent), not seek buttons
+  btn.parentElement.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 }
 
@@ -2320,7 +2338,6 @@ async function finishRegistration() {
   btn.disabled = false;
   showMainApp();
   showToast('✓ Профиль сохранён');
-  simulateLikes();
 }
 
 function editProfile() {
@@ -2356,6 +2373,12 @@ function selectShowOption(el, val) {
   el.classList.add('selected');
 }
 function saveSettings() {
+  const ageMin = document.getElementById('age-min')?.value;
+  const ageMax = document.getElementById('age-max')?.value;
+  const dist   = document.getElementById('dist-range')?.value;
+  if (ageMin) localStorage.setItem('prive_age_min', ageMin);
+  if (ageMax) localStorage.setItem('prive_age_max', ageMax);
+  if (dist)   localStorage.setItem('prive_dist', dist);
   closeSubScreen('settings');
   showToast('✓ Настройки сохранены');
 }
@@ -2365,6 +2388,13 @@ function saveSettings() {
 // ════════════════════════════════════════════════════════
 function premiumAction(type) {
   if (type === 'message') {
+    if (STATE.isPremium || STATE.isElite) {
+      // У Premium/Elite — прямое сообщение: открываем как матч-приглашение
+      const p = STATE.profiles[STATE.currentProfileIndex];
+      if (!p) return;
+      showToast('Сообщение отправлено — ждите ответа');
+      return;
+    }
     openEliteGate('Прямые сообщения — эксклюзивная функция Privé Elite.<br>Пишите любым резидентам без ожидания мэтча.');
   } else if (type === 'superlike') {
     openPremiumGate('Суперлайк доступен по подписке Privé Premium.<br>Ваш лайк увидят ещё до взаимности!');
@@ -2447,13 +2477,29 @@ function confirmPurchase(plan) {
   if (gate) gate.classList.add('hidden');
   const badge = document.getElementById('map-premium-badge');
   if (badge) badge.style.display = 'none';
+  // Sync with server
+  if (STATE.myTgId) syncSubscriptionStatus();
+}
+
+function submitReport(reason) {
+  closeSubScreen('report');
+  closeSubScreen('safety');
+  showToast('✓ Жалоба отправлена');
+  if (STATE.myTgId) {
+    const fd = new FormData();
+    fd.append('tg_id', STATE.myTgId);
+    fd.append('reason', reason);
+    fetch('https://priveclubgroup.ru/api/report', { method: 'POST', body: fd }).catch(() => {});
+  }
 }
 
 // ════════════════════════════════════════════════════════
 //  STATS
 // ════════════════════════════════════════════════════════
 function updateStats() {
-  const views = parseInt(localStorage.getItem('prive_views') || '0') + Math.floor(STATE.swipeCount * 2.3);
+  const base = parseInt(localStorage.getItem('prive_views') || '0');
+  const views = base + Math.floor(STATE.swipeCount * 2.3);
+  localStorage.setItem('prive_views', views);
   document.getElementById('stat-likes').textContent = STATE.likedProfiles.length;
   document.getElementById('stat-matches').textContent = STATE.matches.length;
   document.getElementById('stat-views').textContent = views;
@@ -2492,8 +2538,7 @@ function escapeHtml(t) {
 // ════════════════════════════════════════════════════════
 //  START
 // ════════════════════════════════════════════════════════
-// Start simulating likes if already registered
-if (localStorage.getItem('prive_user_saved')) simulateLikes();
+// Если пользователь уже зарегистрирован — лайки загрузятся через showMainApp → loadRealLikes
 </script>
 </body>
 </html>
