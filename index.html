@@ -650,14 +650,14 @@ input[type=range]::-webkit-slider-thumb {
         </div>
         <div>
           <label class="block text-[10px] text-[var(--muted)] uppercase tracking-[2px] mb-2 ml-1">Пол *</label>
-          <div class="flex gap-3 gender-row-gender">
+          <div class="flex gap-3">
             <button class="gender-btn active" onclick="selectGender(this)">Мужской</button>
             <button class="gender-btn" onclick="selectGender(this)">Женский</button>
           </div>
         </div>
         <div>
           <label class="block text-[10px] text-[var(--muted)] uppercase tracking-[2px] mb-2 ml-1">Ищу</label>
-          <div class="flex gap-3 gender-row-seek">
+          <div class="flex gap-3">
             <button class="gender-btn active" id="seek-btn-1" onclick="selectSeek(this)">Женщин</button>
             <button class="gender-btn" id="seek-btn-2" onclick="selectSeek(this)">Мужчин</button>
             <button class="gender-btn" id="seek-btn-3" onclick="selectSeek(this)">Всех</button>
@@ -711,27 +711,27 @@ input[type=range]::-webkit-slider-thumb {
         <div class="photo-slot">
           <div class="plus-icon" id="plus-1"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg></div>
           <img id="preview-1" class="hidden">
-          <input id="photo-1" type="file" accept="image/*" onchange="previewMedia(this,'preview-1','plus-1')">
+          <input type="file" accept="image/*" onchange="previewMedia(this,'preview-1','plus-1')">
         </div>
         <div class="photo-slot">
           <div class="plus-icon" id="plus-2"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg></div>
           <img id="preview-2" class="hidden">
-          <input id="photo-2" type="file" accept="image/*" onchange="previewMedia(this,'preview-2','plus-2')">
+          <input type="file" accept="image/*" onchange="previewMedia(this,'preview-2','plus-2')">
         </div>
         <div class="photo-slot">
           <div class="plus-icon" id="plus-3"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg></div>
           <img id="preview-3" class="hidden">
-          <input id="photo-3" type="file" accept="image/*" onchange="previewMedia(this,'preview-3','plus-3')">
+          <input type="file" accept="image/*" onchange="previewMedia(this,'preview-3','plus-3')">
         </div>
         <div class="photo-slot">
           <div class="plus-icon" id="plus-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg></div>
           <img id="preview-4" class="hidden">
-          <input id="photo-4" type="file" accept="image/*" onchange="previewMedia(this,'preview-4','plus-4')">
+          <input type="file" accept="image/*" onchange="previewMedia(this,'preview-4','plus-4')">
         </div>
         <div class="photo-slot">
           <div class="plus-icon" id="plus-5"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg></div>
           <img id="preview-5" class="hidden">
-          <input id="photo-5" type="file" accept="image/*" onchange="previewMedia(this,'preview-5','plus-5')">
+          <input type="file" accept="image/*" onchange="previewMedia(this,'preview-5','plus-5')">
         </div>
         <div class="photo-slot">
           <div class="plus-icon" id="plus-vid">
@@ -739,7 +739,7 @@ input[type=range]::-webkit-slider-thumb {
             <span class="text-[10px] uppercase tracking-wider">Видео</span>
           </div>
           <video id="preview-vid" class="hidden" autoplay muted loop playsinline></video>
-          <input id="video-1" type="file" accept="video/*" onchange="previewMedia(this,'preview-vid','plus-vid')">
+          <input type="file" accept="video/*" onchange="previewMedia(this,'preview-vid','plus-vid')">
         </div>
       </div>
       <div class="mt-10">
@@ -1425,41 +1425,16 @@ input[type=range]::-webkit-slider-thumb {
     <p class="text-center text-[10px] text-[var(--muted)]">Включает все возможности Premium</p>
   </div>
 </div>
-</body>
-</html>
 <script>
 // ═══════════════════════════════════════════════════════
 //  PRIVÉ CLUB SOCHI · Full Mini App JS
 // ═══════════════════════════════════════════════════════
-
-// ── Telegram WebApp init ──
-const tg = window.Telegram?.WebApp;
-if (tg) {
-  tg.expand();
-  tg.setBackgroundColor('#0E0E0E');
-  tg.setHeaderColor('#0E0E0E');
-  // Извлекаем ID пользователя из Telegram initData
-  const tgUser = tg.initDataUnsafe?.user;
-  if (tgUser?.id) {
-    STATE.myTgId = tgUser.id;
-    // Если имя не сохранено локально — берём из Telegram
-    if (!localStorage.getItem('prive_user_name') && tgUser.first_name) {
-      // Запишем как подсказку на первый шаг регистрации
-      document.addEventListener('DOMContentLoaded', () => {
-        const nameInp = document.getElementById('reg-name');
-        if (nameInp && !nameInp.value) nameInp.value = tgUser.first_name;
-      });
-    }
-  }
-}
 
 // ── App State ──
 const STATE = {
   myTgId: null,            // Telegram user ID (из initData)
   activeMatchDbId: null,   // реальный ID матча из базы для чата
   currentProfileIndex: 0,
-  currentRegStep: 1,
-  isEditing: false,
   profiles: [],
   likedProfiles: [],    // {index, img, name, age}
   matches: [],          // {id, name, age, img, imgs}
@@ -1487,6 +1462,28 @@ const DEMO_PROFILES = [
 ];
 
 const INTERESTS = ["Путешествия","Спорт","Йога","Теннис","Гольф","Серфинг","Skiing","Art","Музыка","Jazz","Гастрономия","Wine","Фото","Кино","Бизнес","IT","Чтение","Nature","Hiking","Танцы"];
+
+// ── Telegram WebApp init ──
+const tg = window.Telegram?.WebApp;
+if (tg) {
+  tg.expand();
+  tg.setBackgroundColor('#0E0E0E');
+  tg.setHeaderColor('#0E0E0E');
+  const tgUser = tg.initDataUnsafe?.user;
+  if (tgUser?.id) {
+    STATE.myTgId = tgUser.id;
+    if (!localStorage.getItem('prive_user_name') && tgUser.first_name) {
+      document.addEventListener('DOMContentLoaded', () => {
+        const nameInp = document.getElementById('reg-name');
+        if (nameInp && !nameInp.value) nameInp.value = tgUser.first_name;
+      });
+    }
+  }
+}
+
+// ── Global flags (used by editProfile and reg steps) ──
+let currentRegStep = 1;
+let isEditing = false;
 
 // ════════════════════════════════════════════════════════
 //  INIT
@@ -2242,7 +2239,6 @@ function selectSeek(btn) {
   btn.classList.add('active');
 }
 
-let currentRegStep = 1, isEditing = false;
 function nextRegStep(step) {
   if (step === 2) {
     const name = document.getElementById('user-name-input').value.trim();
