@@ -477,6 +477,95 @@ input[type=range]::-webkit-slider-thumb {
 .dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.35); transition: all 0.2s; }
 .dot.active { background: #fff; width: 16px; border-radius: 3px; }
 
+/* ══════════════════════════════════════════════
+   SMOOTH ANIMATIONS — subscreens, modals, tabs
+   ══════════════════════════════════════════════ */
+
+/* Subscreens — slide in from right */
+@keyframes ssSlideIn {
+  from { transform: translateX(100%); opacity: 0.6; }
+  to   { transform: translateX(0);    opacity: 1;   }
+}
+@keyframes ssSlideOut {
+  from { transform: translateX(0);    opacity: 1;   }
+  to   { transform: translateX(100%); opacity: 0;   }
+}
+.ss-enter { animation: ssSlideIn 0.30s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+.ss-exit  { animation: ssSlideOut 0.22s cubic-bezier(0.55,0,1,0.45) forwards; }
+
+/* Modal box — slide up with bounce */
+@keyframes modalUp {
+  from { transform: translateY(120%); opacity: 0.4; }
+  to   { transform: translateY(0);    opacity: 1;   }
+}
+@keyframes modalDown {
+  from { transform: translateY(0);    opacity: 1;   }
+  to   { transform: translateY(110%); opacity: 0;   }
+}
+@keyframes overlayIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes overlayOut { from { opacity: 1; } to { opacity: 0; } }
+.modal-overlay-in  { animation: overlayIn  0.20s ease forwards; }
+.modal-overlay-out { animation: overlayOut 0.20s ease forwards; }
+#modal-box { animation: modalUp 0.32s cubic-bezier(0.34,1.42,0.64,1) forwards; }
+#modal-box.modal-box-exit { animation: modalDown 0.20s cubic-bezier(0.55,0,1,0.45) forwards; }
+
+/* Tab screens — fade + tiny lift */
+@keyframes tabIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+.tab-in { animation: tabIn 0.22s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+
+/* Full-chat & profile-view — slide up from bottom */
+@keyframes panelUp {
+  from { transform: translateY(100%); opacity: 0.5; }
+  to   { transform: translateY(0);    opacity: 1;   }
+}
+@keyframes panelDown {
+  from { transform: translateY(0);    opacity: 1;   }
+  to   { transform: translateY(100%); opacity: 0;   }
+}
+.panel-enter { animation: panelUp   0.30s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+.panel-exit  { animation: panelDown 0.24s cubic-bezier(0.55,0,1,0.45) forwards; }
+
+/* Buttons — press scale */
+.btn-gold, .btn-elite {
+  transition: transform 0.12s cubic-bezier(0.34,1.56,0.64,1), opacity 0.12s ease;
+}
+.btn-gold:active, .btn-elite:active {
+  transform: scale(0.96) !important;
+  opacity: 0.85;
+}
+
+/* Menu items — subtle press */
+.menu-item {
+  transition: background 0.12s ease, transform 0.1s ease;
+}
+.menu-item:active {
+  background: var(--surface2);
+  transform: scale(0.985);
+}
+
+/* Nav buttons */
+.nav-btn {
+  transition: transform 0.14s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease;
+}
+.nav-btn:active { transform: scale(0.86); }
+
+/* Round action buttons (like/nope/superlike) */
+#btn-like, #btn-nope {
+  transition: transform 0.14s cubic-bezier(0.34,1.56,0.64,1);
+}
+#btn-like:active, #btn-nope:active { transform: scale(0.88) !important; }
+
+/* Subscription cards on profile */
+.sub-card-press {
+  transition: transform 0.15s cubic-bezier(0.34,1.3,0.64,1), box-shadow 0.15s ease;
+}
+.sub-card-press:active {
+  transform: scale(0.97);
+}
+
 /* ── SHIMMER LOADING ── */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
@@ -938,7 +1027,7 @@ input[type=range]::-webkit-slider-thumb {
       </div>
       <h3 class="font-display text-2xl font-bold text-[var(--gold)] mb-2">Radar</h3>
       <p class="text-[var(--muted)] text-sm leading-relaxed mb-8">Видите кто рядом с вами прямо сейчас.<br>Функция доступна подписчикам <span class="text-[var(--gold)]">Privé Premium</span></p>
-      <button onclick="closeModal(); openSubScreen('premium')" class="btn-gold mb-3" style="max-width:260px">Открыть с Premium</button>
+      <button onclick="_doCloseModal(); openSubScreen('premium')" class="btn-gold mb-3" style="max-width:260px">Открыть с Premium</button>
       <button onclick="openSubScreen('elite')" class="w-full py-3 text-[var(--gold2)] text-sm" style="max-width:260px">Или Elite — включает Premium</button>
     </div>
   </div>
@@ -979,7 +1068,7 @@ input[type=range]::-webkit-slider-thumb {
 
     <div class="px-4 space-y-3 mb-5">
       <!-- Premium -->
-      <div onclick="openSubScreen('premium')" class="bg-[var(--gold)] rounded-2xl p-4 flex items-center justify-between cursor-pointer active:scale-[0.98] transition-transform shadow-[0_4px_20px_rgba(242,232,201,0.2)]">
+      <div onclick="openSubScreen('premium')" class="sub-card-press bg-[var(--gold)] rounded-2xl p-4 flex items-center justify-between cursor-pointer shadow-[0_4px_20px_rgba(242,232,201,0.2)]">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-black/10 flex items-center justify-center">
             <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 3h12l4 6-10 12L2 9l4-6z"/></svg>
@@ -992,7 +1081,7 @@ input[type=range]::-webkit-slider-thumb {
         <svg class="w-4 h-4 text-black/40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
       </div>
       <!-- Elite -->
-      <div onclick="openSubScreen('elite')" class="bg-[var(--surface2)] rounded-2xl p-4 flex items-center justify-between border border-[var(--gold2)]/40 cursor-pointer active:scale-[0.98] transition-transform shadow-[0_0_20px_rgba(230,213,184,0.08)]">
+      <div onclick="openSubScreen('elite')" class="sub-card-press bg-[var(--surface2)] rounded-2xl p-4 flex items-center justify-between border border-[var(--gold2)]/40 cursor-pointer shadow-[0_0_20px_rgba(230,213,184,0.08)]">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-[var(--gold2)]/10 flex items-center justify-center">
             <svg class="w-5 h-5 text-[var(--gold2)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09l2.846.813-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
@@ -1439,10 +1528,9 @@ input[type=range]::-webkit-slider-thumb {
       </div>
     </div>
   </div>
-  </div></div>
   <div class="px-5 pb-8 pt-4 border-t border-[var(--gold2)]/20" style="background:var(--bg)">
-    <button onclick="buyPlan('elite')" class="btn-elite mb-2">Elite · 10 000 ₽/мес</button>
-    <p class="text-center text-[10px] text-[var(--muted)]">Включает все возможности Premium</p>
+    <button onclick="buyPlan('elite')" style="display:block;width:100%;height:58px;background:linear-gradient(135deg,#E6D5B8 0%,#CBB799 100%);color:#000;font-weight:700;font-size:16px;border-radius:18px;border:none;cursor:pointer;box-shadow:0 4px 24px rgba(203,183,153,0.35);margin-bottom:8px;transition:transform 0.15s,opacity 0.15s" onpointerdown="this.style.transform='scale(0.97)'" onpointerup="this.style.transform=''" onpointerleave="this.style.transform=''">Elite · 10 000 ₽/мес</button>
+    <p class="text-center text-[10px] text-[var(--muted)]">Отменить можно в любой момент</p>
   </div>
 </div>
 <script>
@@ -1834,22 +1922,28 @@ function openFullChat(matchId) {
   const match = STATE.matches.find(m => m.id === matchId);
   if (!match) return;
   STATE.activeChatId = matchId;
-  // Сохраняем реальный ID матча из базы (если он есть)
   STATE.activeMatchDbId = match.dbMatchId || null;
-  // Если есть реальный matchId — подгружаем историю сообщений
-  if (match.dbMatchId && STATE.myTgId) {
-    loadChatHistory(match.dbMatchId);
-  }
+  if (match.dbMatchId && STATE.myTgId) loadChatHistory(match.dbMatchId);
   document.getElementById('fchat-avatar').src = match.img;
   document.getElementById('fchat-name').textContent = match.name + ', ' + match.age;
   document.getElementById('fchat-status').textContent = 'онлайн';
   renderFChatMessages();
-  document.getElementById('full-chat-screen').classList.remove('hidden');
+  const el = document.getElementById('full-chat-screen');
+  el.classList.remove('hidden', 'panel-exit');
+  void el.offsetWidth;
+  el.classList.add('panel-enter');
+  el.addEventListener('animationend', () => el.classList.remove('panel-enter'), { once: true });
 }
 
 function closeFCHAT() {
-  document.getElementById('full-chat-screen').classList.add('hidden');
-  openTab('chats');
+  const el = document.getElementById('full-chat-screen');
+  el.classList.remove('panel-enter');
+  el.classList.add('panel-exit');
+  el.addEventListener('animationend', () => {
+    el.classList.add('hidden');
+    el.classList.remove('panel-exit');
+    openTab('chats');
+  }, { once: true });
 }
 
 function openFChatProfile() {
@@ -2022,9 +2116,21 @@ function openProfileView(p) {
     p.district ? ['📍', p.district + ' район'] : null,
   ].filter(Boolean);
   info.innerHTML = rows.map(([icon, val]) => `<div class="flex items-center gap-3 py-2 border-b border-[var(--border)]"><span class="text-base">${icon}</span><span class="text-sm text-[var(--muted2)]">${val}</span></div>`).join('');
-  document.getElementById('profile-view-screen').classList.remove('hidden');
+  const pv = document.getElementById('profile-view-screen');
+  pv.classList.remove('hidden', 'panel-exit');
+  void pv.offsetWidth;
+  pv.classList.add('panel-enter');
+  pv.addEventListener('animationend', () => pv.classList.remove('panel-enter'), { once: true });
 }
-function closeProfileView() { document.getElementById('profile-view-screen').classList.add('hidden'); }
+function closeProfileView() {
+  const el = document.getElementById('profile-view-screen');
+  el.classList.remove('panel-enter');
+  el.classList.add('panel-exit');
+  el.addEventListener('animationend', () => {
+    el.classList.add('hidden');
+    el.classList.remove('panel-exit');
+  }, { once: true });
+}
 function nextProfilePhoto() {
   const photos = STATE.activeProfilePhotos;
   STATE.activeProfilePhotoIndex = (STATE.activeProfilePhotoIndex + 1) % photos.length;
@@ -2130,13 +2236,16 @@ function openTab(tab) {
     document.getElementById('screen-' + t).classList.add('screen-hidden');
     document.getElementById('nav-' + t).classList.remove('active');
   });
-  document.getElementById('screen-' + tab).classList.remove('screen-hidden');
+  const el = document.getElementById('screen-' + tab);
+  el.classList.remove('screen-hidden', 'tab-in');
+  void el.offsetWidth;
+  el.classList.add('tab-in');
+  el.addEventListener('animationend', () => el.classList.remove('tab-in'), { once: true });
   document.getElementById('nav-' + tab).classList.add('active');
   if (tab === 'map') {
     setTimeout(() => {
       initMap();
       if (STATE.mapInstance) STATE.mapInstance.invalidateSize();
-      // Re-check premium status every time map is opened
       const gate = document.getElementById('map-gate');
       if (!STATE.isPremium && !STATE.isElite) gate.classList.remove('hidden');
       else gate.classList.add('hidden');
@@ -2157,8 +2266,24 @@ function updateNavBadge(nav, count) {
 // ════════════════════════════════════════════════════════
 //  SUBSCREENS
 // ════════════════════════════════════════════════════════
-function openSubScreen(id) { document.getElementById('subscreen-' + id)?.classList.remove('hidden'); }
-function closeSubScreen(id) { document.getElementById('subscreen-' + id)?.classList.add('hidden'); }
+function openSubScreen(id) {
+  const el = document.getElementById('subscreen-' + id);
+  if (!el) return;
+  el.classList.remove('hidden', 'ss-exit');
+  void el.offsetWidth;
+  el.classList.add('ss-enter');
+  el.addEventListener('animationend', () => el.classList.remove('ss-enter'), { once: true });
+}
+function closeSubScreen(id) {
+  const el = document.getElementById('subscreen-' + id);
+  if (!el) return;
+  el.classList.remove('ss-enter');
+  el.classList.add('ss-exit');
+  el.addEventListener('animationend', () => {
+    el.classList.add('hidden');
+    el.classList.remove('ss-exit');
+  }, { once: true });
+}
 
 function openBrandInfo() {
   openModal(`
@@ -2181,7 +2306,7 @@ function openFilterModal() {
         `<button onclick="selectDistrict('${d}')" class="px-3 py-2 bg-[var(--surface2)] border border-[var(--border2)] rounded-full text-xs text-[var(--muted2)] active:border-[var(--gold)] transition-colors">${d}</button>`
       ).join('')}
     </div>
-    <button onclick="closeModal(); showToast('Фильтры применены')" class="btn-gold">Применить</button>
+    <button onclick="_doCloseModal(); showToast('Фильтры применены')" class="btn-gold">Применить</button>
   `);
 }
 
@@ -2195,13 +2320,32 @@ function selectDistrict(d) {
 //  MODAL
 // ════════════════════════════════════════════════════════
 function openModal(html) {
+  const overlay = document.getElementById('modal-overlay');
+  const box     = document.getElementById('modal-box');
   document.getElementById('modal-content').innerHTML = html;
-  document.getElementById('modal-overlay').classList.remove('hidden');
+  overlay.classList.remove('hidden', 'modal-overlay-out');
+  box.classList.remove('modal-box-exit');
+  void overlay.offsetWidth;
+  overlay.classList.add('modal-overlay-in');
+  box.style.animation = 'none';
+  void box.offsetWidth;
+  box.style.animation = '';
 }
 function closeModal(e) {
-  if (!e || e.target === document.getElementById('modal-overlay')) {
-    document.getElementById('modal-overlay').classList.add('hidden');
-  }
+  if (e && e.target !== document.getElementById('modal-overlay')) return;
+  _doCloseModal();
+}
+function _doCloseModal() {
+  const overlay = document.getElementById('modal-overlay');
+  const box     = document.getElementById('modal-box');
+  box.classList.add('modal-box-exit');
+  overlay.classList.remove('modal-overlay-in');
+  overlay.classList.add('modal-overlay-out');
+  setTimeout(() => {
+    overlay.classList.add('hidden');
+    overlay.classList.remove('modal-overlay-out');
+    box.classList.remove('modal-box-exit');
+  }, 220);
 }
 
 // ════════════════════════════════════════════════════════
@@ -2419,8 +2563,8 @@ function openEliteGate(message) {
       </div>
       <h3 class="font-display text-xl font-bold text-[var(--gold2)] mb-2">Privé Elite</h3>
       <p class="text-[var(--muted)] text-sm mb-6 leading-relaxed">${message}</p>
-      <button onclick="closeModal(); openSubScreen('elite')" class="btn-elite mb-3">Узнать об Elite</button>
-      <button onclick="closeModal()" class="w-full py-3 text-[var(--muted)] text-sm">Не сейчас</button>
+      <button onclick="_doCloseModal(); openSubScreen('elite')" class="btn-elite mb-3">Узнать об Elite</button>
+      <button onclick="_doCloseModal()" class="w-full py-3 text-[var(--muted)] text-sm">Не сейчас</button>
     </div>
   `);
 }
@@ -2433,52 +2577,50 @@ function openPremiumGate(message) {
       </div>
       <h3 class="font-display text-xl font-bold mb-2">Privé Premium</h3>
       <p class="text-[var(--muted)] text-sm mb-6 leading-relaxed">${message}</p>
-      <button onclick="closeModal(); openSubScreen('premium')" class="btn-gold mb-3">Узнать больше</button>
-      <button onclick="closeModal()" class="w-full py-3 text-[var(--muted)] text-sm">Не сейчас</button>
+      <button onclick="_doCloseModal(); openSubScreen('premium')" class="btn-gold mb-3">Узнать больше</button>
+      <button onclick="_doCloseModal()" class="w-full py-3 text-[var(--muted)] text-sm">Не сейчас</button>
     </div>
   `);
 }
 
 function buyPlan(plan) {
-  closeModal();
   if (plan === 'elite') {
     closeSubScreen('elite');
-    const price = 10000;
-    openModal(`
+    setTimeout(() => openModal(`
       <div class="text-center py-2">
         <p class="font-display text-[var(--gold2)] text-sm tracking-[3px] uppercase mb-2">Privé Elite</p>
-        <h3 class="font-display text-3xl font-bold mb-1">${price.toLocaleString('ru')} ₽</h3>
+        <h3 class="font-display text-3xl font-bold mb-1">10 000 ₽</h3>
         <p class="text-[var(--muted)] text-xs mb-6">в месяц · отмена в любое время</p>
         <button onclick="confirmPurchase('elite')" class="btn-elite mb-3">Подтвердить оплату</button>
-        <button onclick="closeModal()" class="w-full py-3 text-[var(--muted)] text-sm">Отмена</button>
+        <button onclick="_doCloseModal()" class="w-full py-3 text-[var(--muted)] text-sm">Отмена</button>
       </div>
-    `);
+    `), 260);
   } else {
     closeSubScreen('premium');
-    openModal(`
+    setTimeout(() => openModal(`
       <div class="text-center py-2">
         <p class="font-display text-[var(--gold)] text-sm tracking-[3px] uppercase mb-2">Privé Premium</p>
         <h3 class="font-display text-3xl font-bold mb-1">5 940 ₽</h3>
         <p class="text-[var(--muted)] text-xs mb-6">в месяц · отмена в любое время</p>
         <button onclick="confirmPurchase('premium')" class="btn-gold mb-3">Подтвердить оплату</button>
-        <button onclick="closeModal()" class="w-full py-3 text-[var(--muted)] text-sm">Отмена</button>
+        <button onclick="_doCloseModal()" class="w-full py-3 text-[var(--muted)] text-sm">Отмена</button>
       </div>
-    `);
+    `), 260);
   }
 }
 
 function confirmPurchase(plan) {
-  closeModal();
-  if (plan === 'elite') { STATE.isPremium = true; STATE.isElite = true; localStorage.setItem('prive_elite','true'); localStorage.setItem('prive_premium','true'); }
-  else { STATE.isPremium = true; localStorage.setItem('prive_premium','true'); }
-  showToast('✓ Подписка ' + (plan === 'elite' ? 'Elite' : 'Premium') + ' активирована!');
-  // Unlock map immediately
-  const gate = document.getElementById('map-gate');
-  if (gate) gate.classList.add('hidden');
-  const badge = document.getElementById('map-premium-badge');
-  if (badge) badge.style.display = 'none';
-  // Sync with server
-  if (STATE.myTgId) syncSubscriptionStatus();
+  _doCloseModal();
+  setTimeout(() => {
+    if (plan === 'elite') { STATE.isPremium = true; STATE.isElite = true; localStorage.setItem('prive_elite','true'); localStorage.setItem('prive_premium','true'); }
+    else { STATE.isPremium = true; localStorage.setItem('prive_premium','true'); }
+    showToast('✓ Подписка ' + (plan === 'elite' ? 'Elite' : 'Premium') + ' активирована!');
+    const gate = document.getElementById('map-gate');
+    if (gate) gate.classList.add('hidden');
+    const badge = document.getElementById('map-premium-badge');
+    if (badge) badge.style.display = 'none';
+    if (STATE.myTgId) syncSubscriptionStatus();
+  }, 240);
 }
 
 function submitReport(reason) {
@@ -2521,7 +2663,7 @@ function confirmLogout() {
       <h3 class="font-bold text-lg mb-2">Выйти из аккаунта?</h3>
       <p class="text-[var(--muted)] text-sm mb-6">Все данные останутся на сервере</p>
       <button onclick="doLogout()" class="w-full py-4 bg-red-500/10 border border-red-500/30 text-red-400 rounded-2xl font-medium mb-3">Выйти</button>
-      <button onclick="closeModal()" class="w-full py-3 text-[var(--muted)] text-sm">Отмена</button>
+      <button onclick="_doCloseModal()" class="w-full py-3 text-[var(--muted)] text-sm">Отмена</button>
     </div>
   `);
 }
