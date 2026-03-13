@@ -1593,15 +1593,28 @@ let isEditing = false;
 window.addEventListener('DOMContentLoaded', () => {
   renderInterests();
   const saved = localStorage.getItem('prive_user_saved');
-  if (saved) {
-    STATE.myName = localStorage.getItem('prive_user_name') || 'Пользователь';
-    STATE.myAge  = localStorage.getItem('prive_user_age') || '';
-    STATE.myPhoto = localStorage.getItem('prive_user_photo') || '';
-    STATE.isPremium = localStorage.getItem('prive_premium') === 'true';
-    STATE.isElite   = localStorage.getItem('prive_elite') === 'true';
-    showMainApp();
+
+  // Восстанавливаем tg_id: сначала из Telegram, иначе из localStorage
+  const tgUser = tg?.initDataUnsafe?.user;
+  if (tgUser?.id) {
+    STATE.myTgId = tgUser.id;
+  } else {
+    const savedTgId = localStorage.getItem('prive_tg_id');
+    if (savedTgId) STATE.myTgId = savedTgId;
   }
-  loadProfiles();
+
+  if (saved) {
+    STATE.myName    = localStorage.getItem('prive_user_name') || 'Пользователь';
+    STATE.myAge     = localStorage.getItem('prive_user_age')  || '';
+    STATE.myPhoto   = localStorage.getItem('prive_user_photo') || '';
+    STATE.isPremium = localStorage.getItem('prive_premium') === 'true';
+    STATE.isElite   = localStorage.getItem('prive_elite')   === 'true';
+    showMainApp();
+    loadProfiles();
+  } else {
+    // Не зарегистрирован — показываем форму, но фид грузим в фоне
+    loadProfiles();
+  }
   updateStats();
 });
 
@@ -1661,20 +1674,46 @@ function injectLogos() {
 // ════════════════════════════════════════════════════════
 async function loadProfiles() {
   try {
-    const tgId = STATE.myTgId || '';
-    const url = tgId
-      ? `https://priveclubgroup.ru/api/feed?tg_id=${tgId}&limit=30`
-      : 'https://priveclubgroup.ru/api/feed?limit=30';
-    const res = await fetch(url);
+    const tgId  = STATE.myTgId || '';
+    const ageMin = localStorage.getItem('prive_age_min') || '';
+    const ageMax = localStorage.getItem('prive_age_max') || '';
+    const dist   = localStorage.getItem('prive_dist') || '';
+    const params = new URLSearchParams({ limit: 30 });
+    if (tgId)   params.set('tg_id', tgId);
+    if (ageMin) params.set('age_min', ageMin);
+    if (ageMax) params.set('age_max', ageMax);
+    if (dist)   params.set('dist', dist);
+    const url = `https://priveclubgroup.ru/api/feed?${params.toString()}`;
+    console.log('[loadProfiles] GET', url);
+    const res  = await fetch(url);
     const data = await res.json();
-    if (data.status === 'success' && data.profiles?.length) {
+    console.log('[loadProfiles] response:', data);
+    if (Array.isArray(data)) {
+      // Сервер вернул массив напрямую
+      STATE.profiles = data;
+    } else if (data.profiles?.length) {
       STATE.profiles = data.profiles;
+    } else if (data.data?.length) {
+      STATE.profiles = data.data;
+    } else {
+      STATE.profiles = [];
+    }
+    if (STATE.profiles.length) {
+      // Нормализуем поле фото (img / photo / photo_url / photos[0])
+      STATE.profiles = STATE.profiles.map(p => ({
+        ...p,
+        img:  p.img || p.photo || p.photo_url || (p.photos?.[0]) || '',
+        imgs: p.imgs || p.photos || [p.img || p.photo || p.photo_url || ''],
+        name: p.name || p.username || 'Аноним',
+        age:  p.age  || '?',
+      }));
       STATE.currentProfileIndex = 0;
       updateCards();
       return;
     }
-  } catch(e) { console.warn('[loadProfiles]', e); }
-  // Нет анкет — показываем пустой экран
+  } catch(e) {
+    console.warn('[loadProfiles] error:', e);
+  }
   STATE.profiles = [];
   showEmptyFeed();
 }
@@ -2450,34 +2489,107 @@ async function finishRegistration() {
   const btn = document.getElementById('btn-finish-reg');
   const nameInput = document.getElementById('user-name-input').value.trim();
   const dobInput  = document.getElementById('user-age-input').value;
+  const bioInput  = document.getElementById('user-bio-input')?.value.trim() || '';
+  const jobInput  = document.getElementById('user-job-input')?.value.trim() || '';
+  const heightInput = document.getElementById('user-height-input')?.value.trim() || '';
+
   if (!nameInput) { showToast('Введите имя'); return; }
+  if (!dobInput)  { showToast('Укажите дату рождения'); return; }
+
   btn.textContent = 'Сохранение...'; btn.disabled = true;
-  let age = '';
+
+  // Вычисляем возраст
+  let age = 18;
   if (dobInput) {
     const bd = new Date(dobInput), td = new Date();
     age = td.getFullYear() - bd.getFullYear();
     if (td.getMonth() < bd.getMonth() || (td.getMonth() === bd.getMonth() && td.getDate() < bd.getDate())) age--;
   }
-  let tg_id = tg?.initDataUnsafe?.user?.id || Math.floor(Math.random() * 1e7);
+
+  // tg_id — берём из Telegram или из localStorage (чтобы не менялся при перезаходе)
+  let tg_id = tg?.initDataUnsafe?.user?.id;
+  if (!tg_id) {
+    tg_id = localStorage.getItem('prive_tg_id');
+    if (!tg_id) {
+      tg_id = 'u_' + Date.now() + '_' + Math.floor(Math.random() * 9999);
+      localStorage.setItem('prive_tg_id', tg_id);
+    }
+  }
+  STATE.myTgId = tg_id;
+
+  // Определяем выбранный пол и поиск
+  const genderBtn = document.querySelector('#reg-step-1 .gender-btn.active');
+  const seekBtn   = document.querySelector('[id^="seek-btn-"].active');
+  const gender    = genderBtn?.textContent.trim() || '';
+  const seek      = seekBtn?.textContent.trim() || '';
+
   const fd = new FormData();
   fd.append('tg_id', tg_id);
   fd.append('name', nameInput);
-  fd.append('age', age || 18);
+  fd.append('age', age);
+  if (bioInput)    fd.append('bio', bioInput);
+  if (jobInput)    fd.append('job', jobInput);
+  if (heightInput) fd.append('height', heightInput);
+  if (gender)      fd.append('gender', gender);
+  if (seek)        fd.append('seek', seek);
+  if (STATE.selectedInterests?.length) fd.append('interests', STATE.selectedInterests.join(','));
+
+  // Фото
+  let firstPhotoDataUrl = '';
+  const photoFiles = [];
   ['file-1','file-2','file-3','file-4','file-5'].forEach((id, idx) => {
     const f = document.getElementById(id)?.files?.[0];
-    if (f) fd.append('photo_' + (idx+1), f);
+    if (f) { fd.append('photo_' + (idx+1), f); photoFiles.push({ f, idx }); }
   });
   const vid = document.getElementById('file-vid')?.files?.[0];
   if (vid) fd.append('video_1', vid);
+
+  // Сохраняем первое фото в localStorage как превью профиля
+  if (photoFiles.length > 0) {
+    try {
+      firstPhotoDataUrl = await new Promise((res, rej) => {
+        const reader = new FileReader();
+        reader.onload = e => res(e.target.result);
+        reader.onerror = rej;
+        reader.readAsDataURL(photoFiles[0].f);
+      });
+    } catch(e) {}
+  }
+
+  // Отправка на сервер
+  let serverError = null;
   try {
     const res = await fetch('https://priveclubgroup.ru/api/register', { method: 'POST', body: fd });
     const r = await res.json();
-    if (r.status !== 'success' && r.status !== 'ok') throw new Error(r.message);
-  } catch(e) {}
-  STATE.myName = nameInput; STATE.myAge = age;
+    if (r.status !== 'success' && r.status !== 'ok') {
+      serverError = r.message || 'Ошибка сервера';
+    }
+  } catch(e) {
+    serverError = 'Нет соединения с сервером';
+    console.warn('[register]', e);
+  }
+
+  if (serverError) {
+    showToast('⚠ ' + serverError);
+    btn.textContent = isEditing ? 'Сохранить изменения' : 'Завершить регистрацию';
+    btn.disabled = false;
+    return;
+  }
+
+  // Сохраняем всё в STATE и localStorage
+  STATE.myName = nameInput;
+  STATE.myAge  = age;
+  if (firstPhotoDataUrl) {
+    STATE.myPhoto = firstPhotoDataUrl;
+    localStorage.setItem('prive_user_photo', firstPhotoDataUrl);
+  }
   localStorage.setItem('prive_user_saved', 'true');
-  localStorage.setItem('prive_user_name', nameInput);
-  localStorage.setItem('prive_user_age', age);
+  localStorage.setItem('prive_tg_id',      tg_id);
+  localStorage.setItem('prive_user_name',  nameInput);
+  localStorage.setItem('prive_user_age',   age);
+  localStorage.setItem('prive_user_bio',   bioInput);
+  localStorage.setItem('prive_user_job',   jobInput);
+
   btn.textContent = isEditing ? 'Сохранить изменения' : 'Завершить регистрацию';
   btn.disabled = false;
   showMainApp();
