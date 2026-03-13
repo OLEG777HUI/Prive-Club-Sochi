@@ -1629,6 +1629,14 @@ function showMainApp() {
   }
   openTab('home');
   updateStats();
+  // Если профили уже загружены — показываем карточки
+  if (STATE.profiles.length) {
+    STATE.currentProfileIndex = 0;
+    document.getElementById('home-empty').classList.add('hidden');
+    document.getElementById('card-container').classList.remove('hidden');
+    document.getElementById('bg-card-container').classList.remove('hidden');
+    updateCards();
+  }
 }
 
 async function syncSubscriptionStatus() {
@@ -2486,11 +2494,11 @@ function previewMedia(input, previewId, placeholderId) {
 }
 
 async function finishRegistration() {
-  const btn = document.getElementById('btn-finish-reg');
-  const nameInput = document.getElementById('user-name-input').value.trim();
-  const dobInput  = document.getElementById('user-age-input').value;
-  const bioInput  = document.getElementById('user-bio-input')?.value.trim() || '';
-  const jobInput  = document.getElementById('user-job-input')?.value.trim() || '';
+  const btn         = document.getElementById('btn-finish-reg');
+  const nameInput   = document.getElementById('user-name-input').value.trim();
+  const dobInput    = document.getElementById('user-age-input').value;
+  const bioInput    = document.getElementById('user-bio-input')?.value.trim()    || '';
+  const jobInput    = document.getElementById('user-job-input')?.value.trim()    || '';
   const heightInput = document.getElementById('user-height-input')?.value.trim() || '';
 
   if (!nameInput) { showToast('Введите имя'); return; }
@@ -2498,102 +2506,107 @@ async function finishRegistration() {
 
   btn.textContent = 'Сохранение...'; btn.disabled = true;
 
-  // Вычисляем возраст
-  let age = 18;
-  if (dobInput) {
-    const bd = new Date(dobInput), td = new Date();
-    age = td.getFullYear() - bd.getFullYear();
-    if (td.getMonth() < bd.getMonth() || (td.getMonth() === bd.getMonth() && td.getDate() < bd.getDate())) age--;
-  }
+  // ── Возраст ──
+  const bd  = new Date(dobInput), td = new Date();
+  let age   = td.getFullYear() - bd.getFullYear();
+  if (td.getMonth() < bd.getMonth() || (td.getMonth() === bd.getMonth() && td.getDate() < bd.getDate())) age--;
+  age = Math.max(age, 18);
 
-  // tg_id — берём из Telegram или из localStorage (чтобы не менялся при перезаходе)
+  // ── tg_id: стабильный между сессиями ──
   let tg_id = tg?.initDataUnsafe?.user?.id;
   if (!tg_id) {
     tg_id = localStorage.getItem('prive_tg_id');
-    if (!tg_id) {
-      tg_id = 'u_' + Date.now() + '_' + Math.floor(Math.random() * 9999);
-      localStorage.setItem('prive_tg_id', tg_id);
-    }
+    if (!tg_id) { tg_id = 'u_' + Date.now(); localStorage.setItem('prive_tg_id', tg_id); }
   }
-  STATE.myTgId = tg_id;
 
-  // Определяем выбранный пол и поиск
-  const genderBtn = document.querySelector('#reg-step-1 .gender-btn.active');
-  const seekBtn   = document.querySelector('[id^="seek-btn-"].active');
-  const gender    = genderBtn?.textContent.trim() || '';
-  const seek      = seekBtn?.textContent.trim() || '';
-
-  const fd = new FormData();
-  fd.append('tg_id', tg_id);
-  fd.append('name', nameInput);
-  fd.append('age', age);
-  if (bioInput)    fd.append('bio', bioInput);
-  if (jobInput)    fd.append('job', jobInput);
-  if (heightInput) fd.append('height', heightInput);
-  if (gender)      fd.append('gender', gender);
-  if (seek)        fd.append('seek', seek);
-  if (STATE.selectedInterests?.length) fd.append('interests', STATE.selectedInterests.join(','));
-
-  // Фото
-  let firstPhotoDataUrl = '';
-  const photoFiles = [];
-  ['file-1','file-2','file-3','file-4','file-5'].forEach((id, idx) => {
+  // ── Читаем ВСЕ фото как dataURL ──
+  const photoDataUrls = [];
+  for (const id of ['file-1','file-2','file-3','file-4','file-5']) {
     const f = document.getElementById(id)?.files?.[0];
-    if (f) { fd.append('photo_' + (idx+1), f); photoFiles.push({ f, idx }); }
-  });
-  const vid = document.getElementById('file-vid')?.files?.[0];
-  if (vid) fd.append('video_1', vid);
-
-  // Сохраняем первое фото в localStorage как превью профиля
-  if (photoFiles.length > 0) {
+    if (!f) continue;
     try {
-      firstPhotoDataUrl = await new Promise((res, rej) => {
-        const reader = new FileReader();
-        reader.onload = e => res(e.target.result);
-        reader.onerror = rej;
-        reader.readAsDataURL(photoFiles[0].f);
+      const url = await new Promise((res, rej) => {
+        const r = new FileReader(); r.onload = e => res(e.target.result); r.onerror = rej; r.readAsDataURL(f);
       });
+      photoDataUrls.push({ url, file: f });
     } catch(e) {}
   }
 
-  // Отправка на сервер
-  let serverError = null;
-  try {
-    const res = await fetch('https://priveclubgroup.ru/api/register', { method: 'POST', body: fd });
-    const r = await res.json();
-    if (r.status !== 'success' && r.status !== 'ok') {
-      serverError = r.message || 'Ошибка сервера';
-    }
-  } catch(e) {
-    serverError = 'Нет соединения с сервером';
-    console.warn('[register]', e);
-  }
-
-  if (serverError) {
-    showToast('⚠ ' + serverError);
-    btn.textContent = isEditing ? 'Сохранить изменения' : 'Завершить регистрацию';
-    btn.disabled = false;
-    return;
-  }
-
-  // Сохраняем всё в STATE и localStorage
+  // ── Сохраняем локально сразу — независимо от сервера ──
+  STATE.myTgId = tg_id;
   STATE.myName = nameInput;
   STATE.myAge  = age;
-  if (firstPhotoDataUrl) {
-    STATE.myPhoto = firstPhotoDataUrl;
-    localStorage.setItem('prive_user_photo', firstPhotoDataUrl);
+  if (photoDataUrls.length) {
+    STATE.myPhoto = photoDataUrls[0].url;
+    try { localStorage.setItem('prive_user_photo', photoDataUrls[0].url); } catch(e) { /* quota */ }
   }
   localStorage.setItem('prive_user_saved', 'true');
-  localStorage.setItem('prive_tg_id',      tg_id);
-  localStorage.setItem('prive_user_name',  nameInput);
-  localStorage.setItem('prive_user_age',   age);
-  localStorage.setItem('prive_user_bio',   bioInput);
-  localStorage.setItem('prive_user_job',   jobInput);
+  localStorage.setItem('prive_tg_id',     String(tg_id));
+  localStorage.setItem('prive_user_name', nameInput);
+  localStorage.setItem('prive_user_age',  String(age));
+  localStorage.setItem('prive_user_bio',  bioInput);
+  localStorage.setItem('prive_user_job',  jobInput);
 
+  // ── Сразу показываем приложение ──
   btn.textContent = isEditing ? 'Сохранить изменения' : 'Завершить регистрацию';
   btn.disabled = false;
   showMainApp();
   showToast('✓ Профиль сохранён');
+
+  // ── Если фото есть — добавляем анкету прямо в фид немедленно ──
+  if (photoDataUrls.length) {
+    const myCard = {
+      id:   tg_id,
+      name: nameInput,
+      age:  age,
+      img:  photoDataUrls[0].url,
+      imgs: photoDataUrls.map(p => p.url),
+      bio:  bioInput,
+      job:  jobInput,
+    };
+    // Вставляем в конец фида чтобы другие пользователи сессии видели
+    if (!STATE.profiles.find(p => String(p.id) === String(tg_id))) {
+      STATE.profiles.push(myCard);
+    }
+    // Если фид был пустой — показываем карточки
+    if (STATE.profiles.length === 1) {
+      STATE.currentProfileIndex = 0;
+      document.getElementById('home-empty').classList.add('hidden');
+      document.getElementById('card-container').classList.remove('hidden');
+      document.getElementById('bg-card-container').classList.remove('hidden');
+      updateCards();
+    }
+  }
+
+  // ── Отправляем на сервер в фоне ──
+  const fd = new FormData();
+  fd.append('tg_id', tg_id);
+  fd.append('name',  nameInput);
+  fd.append('age',   age);
+  if (bioInput)    fd.append('bio',    bioInput);
+  if (jobInput)    fd.append('job',    jobInput);
+  if (heightInput) fd.append('height', heightInput);
+  const genderBtn = document.querySelector('#reg-step-1 .gender-btn.active');
+  const seekBtn   = document.querySelector('[id^="seek-btn-"].active');
+  if (genderBtn) fd.append('gender', genderBtn.textContent.trim());
+  if (seekBtn)   fd.append('seek',   seekBtn.textContent.trim());
+  if (STATE.selectedInterests?.length) fd.append('interests', STATE.selectedInterests.join(','));
+  photoDataUrls.forEach(({ file }, i) => fd.append('photo_' + (i + 1), file));
+  const vid = document.getElementById('file-vid')?.files?.[0];
+  if (vid) fd.append('video_1', vid);
+
+  fetch('https://priveclubgroup.ru/api/register', { method: 'POST', body: fd })
+    .then(r => r.json())
+    .then(r => {
+      if (r.status === 'success' || r.status === 'ok') {
+        console.log('[register] ✓ сохранено на сервере');
+        // Перезагружаем фид — теперь анкета придёт с сервера с реальным URL фото
+        setTimeout(() => loadProfiles(), 1500);
+      } else {
+        console.warn('[register] сервер:', r.message);
+      }
+    })
+    .catch(e => console.warn('[register] сеть:', e));
 }
 
 function editProfile() {
